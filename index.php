@@ -1,3 +1,7 @@
+<?php
+include './services/connect_db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,12 +32,20 @@
               Sản phẩm
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <?php
+              $sql = "SELECT name FROM categories";
+              $result = $conn->query($sql);
+
+              if ($result->num_rows > 0) {
+                // output data of each row
+                while ($row = $result->fetch_assoc()) {
+                  $name = $row['name'];
+                  echo "<li><a class='dropdown-item' href='#'>$name</a></li>";
+                }
+              }
+
+              ?>
+
             </ul>
           </li>
           <li class="nav-item">
@@ -60,12 +72,14 @@
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1 fw-bold">HOLIDAY SALE</h5>
           <p class="mt-4" style="max-width: 500px; ">Ưu đãi lên đến 50%. Giá hiển thị trên trang web là giá bán cuối cùng. Một số sản phẩm ngoại lệ. Điều khoản và Điều kiện đi kèm.</p>
-          <button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button>
+          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+
+
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">HOLIDAY SALE</h5>
           <p class="" style="max-width: 500px;">Ưu đãi lên đến 50%. Giá hiển thị trên trang web là giá bán cuối cùng. Một số sản phẩm ngoại lệ. Điều khoản và Điều kiện đi kèm.</p>
-          <button class="styled-btn fw-bold mt-2 mb-4 ">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button>
+          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
 
       </div>
@@ -75,10 +89,12 @@
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">TỎA SÁNG CÙNG SAMBA</h5>
           <p class="" style="max-width: 500px;">Châu Bùi, 24K.RIGHT, Lil Thu, Nick Q Tran tỏa sáng cùng Samba. Bạn thì sao?</p>
+          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">TỎA SÁNG CÙNG SAMBA</h5>
           <p class="" style="max-width: 500px;">Châu Bùi, 24K.RIGHT, Lil Thu, Nick Q Tran tỏa sáng cùng Samba. Bạn thì sao?</p>
+          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
       </div>
       <div class="carousel-item" data-bs-interval="4000">
@@ -87,10 +103,12 @@
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">ARSENAL X IAN WRIGHT</h5>
           <p class="" style="max-width: 500px;">Tôn vinh ký ức, khoảnh khắc và con người của Huyền thoại Arsenal trong suốt sự nghiệp của anh.</p>
+          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">ARSENAL X IAN WRIGHT</h5>
           <p class="" style="max-width: 500px;">Tôn vinh ký ức, khoảnh khắc và con người của Huyền thoại Arsenal trong suốt sự nghiệp của anh.</p>
+          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
       </div>
     </div>
@@ -107,8 +125,8 @@
     <h1 class="fs-1 text-center">Sản phẩm nổi bật</h1>
     <div class="container mt-5">
       <div class="row gy-4">
-        <div class="col-lg-3 col-md-6">
-          <div class="card w-100 border-0 shadow-lg rounded-4 ">
+        <div class="col-lg-3  col-6">
+          <div class="card w-100 border-0 shadow rounded-4 ">
             <div class="image-wrapper overflow-hidden rounded-4">
               <img src="./assets/images/products_test/adizero/Giay_Adizero_Prime_X_2.0_STRUNG_trang_HP9709_HM1.avif" class="card-img-top  shadow-sm card-image " alt="giay adidas">
             </div>
@@ -120,84 +138,49 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-          <div class="card w-100 border-0 shadow-lg rounded-4 ">
-            <div class="image-wrapper overflow-hidden rounded-4">
-              <img src="./assets/images/products_test/adizero/Giay_Adizero_Prime_X_2.0_STRUNG_trang_HP9709_HM1.avif" class="card-img-top  shadow-sm card-image " alt="giay adidas">
-            </div>
+        <?php
 
-            <div class="card-body">
-              <h5 class="card-title">Giày Adizero Prime X 2.0</h5>
-              <p class="card-text">3.500.000đ</p>
 
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-          <div class="card w-100 border-0 shadow-lg rounded-4 ">
-            <div class="image-wrapper overflow-hidden rounded-4">
-              <img src="./assets/images/products_test/adizero/Giay_Adizero_Prime_X_2.0_STRUNG_trang_HP9709_HM1.avif" class="card-img-top  shadow-sm card-image " alt="giay adidas">
-            </div>
 
-            <div class="card-body">
-              <h5 class="card-title">Giày Adizero Prime X 2.0</h5>
-              <p class="card-text">3.500.000đ</p>
+        $sql = "SELECT name, price, imageurl FROM shoes";
+        $result = $conn->query($sql);
+        function moneyFormat($x)
+        {
 
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6">
-          <div class="card w-100 border-0 shadow-lg rounded-4 ">
-            <div class="image-wrapper overflow-hidden rounded-4">
-              <img src="./assets/images/products_test/adizero/Giay_Adizero_Prime_X_2.0_STRUNG_trang_HP9709_HM1.avif" class="card-img-top  shadow-sm card-image " alt="giay adidas">
-            </div>
-
-            <div class="card-body">
-              <h5 class="card-title">Giày Adizero Prime X 2.0</h5>
-              <p class="card-text">3.500.000đ</p>
-
+          return str_replace(',', '.', strval(number_format($x)));
+        }
+        if ($result->num_rows > 0) {
+          // output data of each row
+          while ($row = $result->fetch_assoc()) {
+            $name = $row['name'];
+            $imageurl = $row['imageurl'];
+            $price = moneyFormat($row['price']);
+            echo "
+            <div class='col-lg-3  col-6'>
+            <div class='card w-100 border-0 shadow rounded-4 '>
+              <div class='image-wrapper overflow-hidden rounded-4'>
+                <img src=' $imageurl ' class='card-img-top  shadow-sm card-image ' alt='giay adidas'>
+              </div>
+  
+              <div class='card-body'>
+                <h5 class='card-title '>$name </h5>
+                <p class='card-text'> $price đ</p>
+  
+              </div>
             </div>
           </div>
-        </div>
+            ";
+          }
+        } else {
+          echo "0 results";
+        }
+        $conn->close();
+
+        ?>
       </div>
     </div>
   </main>
-  <?php
-  $servername = "localhost";
-  $username = "root";
-  $password = "heroandroidluc@12ky";
-  $database = "testdb";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $database);
 
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-  echo "Connected successfully";
-
-  $sql = "INSERT INTO users (name)
-VALUES ('John')";
-
-  // if ($conn->query($sql) === TRUE) {
-  //   echo "New record created successfully";
-  // } else {
-  //   echo "Error: " . $sql . "<br>" . $conn->error;
-  // }
-
-  $sql = "SELECT name FROM users";
-  $result = $conn->query($sql);
-
-  if ($result->num_rows > 0) {
-    // output data of each row
-    while ($row = $result->fetch_assoc()) {
-      echo " - Name: " . $row["name"] . "<br>";
-    }
-  } else {
-    echo "0 results";
-  }
-  $conn->close();
-  ?>
   <?php
   include "./components/footer.php";
 

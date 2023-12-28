@@ -50,3 +50,10 @@
   top: 4px;
   left: 4px;
 }
+.styled-btn i {
+  transition: 0.5s;
+}
+
+.styled-btn:hover i {
+  transform: translateX(12px);
+}
