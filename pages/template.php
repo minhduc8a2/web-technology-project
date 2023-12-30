@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['logined'])) {
+
+    header('location: /pages/login.php');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,17 +1,24 @@
 <?php
 require_once dirname(__DIR__, 1) . '\services\connect_db.php';
 session_start();
+if (!isset($_SESSION['logined'])) {
+
+    header('location: /pages/login.php');
+}
+
 if (isset($_SESSION["update_quantity"])) {
     if ($_SESSION["update_quantity"] == true) {
         echo "<script>alert('Cập nhật số lượng thành công')</script>";
     } else  echo "<script>alert('Cập nhật số lượng thất bại, vui lòng thử lại sau!')</script>";
+    $_SESSION["update_quantity"] = null;
 }
 if (isset($_SESSION["delete_shoe"])) {
     if ($_SESSION["delete_shoe"] == true) {
         echo "<script>alert('Xóa sản phẩm thành công!')</script>";
     } else  echo "<script>alert('Xóa sản phẩm thất bại, vui lòng thử lại sau!')</script>";
+    $_SESSION["delete_shoe"] = null;
 }
-session_destroy();
+
 ?>
 
 <!DOCTYPE html>

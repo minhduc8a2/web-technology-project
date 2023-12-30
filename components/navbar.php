@@ -1,5 +1,9 @@
 <?php
 require_once dirname(__DIR__, 1) . '\services\connect_db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 ?>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-lg">
@@ -36,7 +40,7 @@ require_once dirname(__DIR__, 1) . '\services\connect_db.php';
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Liên hệ</a>
+                    <a class="nav-link" href="#footer">Liên hệ</a>
                 </li>
             </ul>
             <form class="d-flex mb-0" role="search">
@@ -44,8 +48,26 @@ require_once dirname(__DIR__, 1) . '\services\connect_db.php';
                 <button class="btn btn-outline-success text-nowrap" type="submit">Tìm kiếm</button>
             </form>
             <div class="py-4 py-lg-0">
-                <a href="/pages/login.php" class="ms-lg-4 text-black fs-4"><i class="fa-solid fa-circle-user"></i></a>
+                <?php
+
+                if (isset($_SESSION['logined'])) {
+                    echo '<a href="/pages/user.php" class="ms-lg-4 text-black fs-4" ><i class="fa-solid fa-circle-user" ></i></a>';
+                } else {
+                    echo '<a href="/pages/login.php" class="ms-lg-4 text-black fs-6">Login</a>';
+                }
+                ?>
+
                 <a href="/pages/cart.php" class="ms-4 text-black fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
+                <form method="post" class="d-inline ms-4 text-black fs-5">
+                    <input type='hidden' name='logOut' value='logOut' />
+                    <button type="submit" class="border-0 bg-transparent"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </form>
+                <?php
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["logOut"])) {
+                    $_SESSION['logined'] = null;
+                    header('location: /pages/login.php');
+                }
+                ?>
             </div>
 
         </div>

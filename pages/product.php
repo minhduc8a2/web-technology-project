@@ -1,6 +1,8 @@
 <?php
 require dirname(__DIR__, 1) . '\services\connect_db.php';
+
 $shoesId = $_GET['id'];
+
 $sql = "SELECT shoes.name as name, price,instock, imageurl,description, categories.name as category FROM shoes,categories 
 where shoes.id='$shoesId' and shoes.category=categories.id
 ;";
@@ -49,15 +51,16 @@ session_start();
                 if (isset($_SESSION['add_to_cart'])) {
                     if ($_SESSION['add_to_cart'] == true) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                             Đã thêm sản phẩm vào giỏ hàng
-                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                          </div>";
+             Đã thêm sản phẩm vào giỏ hàng
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+          </div>";
                     } else {
                         echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                            Có lỗi xảy ra, vui lòng thử lại sau!
-                           <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                         </div>";
+            Có lỗi xảy ra, vui lòng thử lại sau!
+           <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+         </div>";
                     }
+                    $_SESSION['add_to_cart'] = null;
                 }
 
 

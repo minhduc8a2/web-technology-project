@@ -1,4 +1,4 @@
-<footer class="bg-black text-white p-5  " style="min-height: 300px; margin-top: 10rem;">
+<footer class="bg-black text-white p-5  " style="min-height: 300px; margin-top: 10rem;" id="footer">
   <div class="container-fluid px-5 d-flex flex-lg-row flex-column justify-content-between">
 
     <div class="">
