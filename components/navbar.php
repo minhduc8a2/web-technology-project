@@ -58,10 +58,15 @@ if (session_status() === PHP_SESSION_NONE) {
                 ?>
 
                 <a href="/pages/cart.php" class="ms-4 text-black fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
-                <form method="post" class="d-inline ms-4 text-black fs-5">
-                    <input type='hidden' name='logOut' value='logOut' />
+                <?php
+
+                if (isset($_SESSION['logined'])) {
+                    echo '<form method="post" class="d-inline ms-4 text-black fs-5">
+                    <input type="hidden" name="logOut" value="logOut" />
                     <button type="submit" class="border-0 bg-transparent"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-                </form>
+                </form>';
+                }
+                ?>
                 <?php
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["logOut"])) {
                     $_SESSION['logined'] = null;

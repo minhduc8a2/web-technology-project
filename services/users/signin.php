@@ -3,6 +3,8 @@ require dirname(__DIR__, 1) . '\connect_db.php';
 
 
 
+
+
 function validateEmail($email)
 {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

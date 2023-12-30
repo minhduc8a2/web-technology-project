@@ -3,12 +3,14 @@ session_start();
 if (!isset($_SESSION['logined'])) {
     header('location: /pages/login.php');
 }
+$id  = $_SESSION['logined']['id'];
 
-$name  = $_SESSION['logined']['name'];
+$userName  = $_SESSION['logined']['name'];
 $email  = $_SESSION['logined']['email'];
 $phoneNumber  = $_SESSION['logined']['phoneNumber'];
 $address  = $_SESSION['logined']['address'];
 $avatar  = $_SESSION['logined']['avatar'];
+
 
 ?>
 
@@ -18,7 +20,7 @@ $avatar  = $_SESSION['logined']['avatar'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title><?= $userName ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/styles.css">
@@ -43,10 +45,28 @@ $avatar  = $_SESSION['logined']['avatar'];
             </div>
             <div class="col-12 col-lg-6">
                 <h1 class="mb-5">Thông tin tài khoản</h1>
-                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-4 shadow rounded-4">
+                <form action="/services/users/update.php" method="post" class="p-lg-5 p-4 shadow rounded-4">
+                    <?php
+                    if (isset($_SESSION['update_user']) && $_SESSION['update_user'] == true) {
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                        Cập nhật thành công.
+                       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                     </div>";
+                        $_SESSION['update_user'] = null;
+                    }
+                    if (isset($_SESSION['error_list'])) {
+                        foreach ($_SESSION['error_list'] as &$value) {
+                            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                     $value
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                  </div>";
+                        }
+                        $_SESSION['error_list'] = null;
+                    }
+                    ?>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Họ tên</label>
-                        <input type="text" class="form-control" id="inputName" name="name" value='<?= $name ?>'>
+                        <input type="text" class="form-control" id="inputName" name="name" value='<?= $userName ?>'>
 
                     </div>
 
@@ -71,6 +91,11 @@ $avatar  = $_SESSION['logined']['avatar'];
 
                     </div>
                     <div class="mb-3">
+                        <label for="inputNewPassword" class="form-label">Mật khẩu Mới</label>
+                        <input type="password" class="form-control" id="inputNewPassword" name="newPassword">
+
+                    </div>
+                    <div class="mb-3">
                         <label for="inputConfirmPassword" class="form-label">Nhập lại Mật khẩu</label>
                         <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword">
 
@@ -82,6 +107,8 @@ $avatar  = $_SESSION['logined']['avatar'];
 
                         </div>
                     </div>
+                    <input type='hidden' name='id' value='<?= $id ?>' />
+
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>
             </div>

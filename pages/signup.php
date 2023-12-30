@@ -65,7 +65,7 @@ session_start();
 
 
                 ?>
-                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-2 shadow rounded-4">
+                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-2 shadow rounded-4" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Họ tên</label>
                         <input type="text" class="form-control" id="inputName" name="name" value='<?= $name ?>'>
