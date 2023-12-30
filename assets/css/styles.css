@@ -4,7 +4,9 @@
 .mt-new-section {
   margin-top: 5rem;
 }
-
+.mt-new-page {
+  margin-top: 8rem;
+}
 .card-image {
   transition: 0.5s;
 }
@@ -56,4 +58,16 @@
 
 .styled-btn:hover i {
   transform: translateX(12px);
+}
+
+a {
+  text-decoration: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: unset;
+}
+
+ul {
+  list-style: none;
 }

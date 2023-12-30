@@ -15,50 +15,9 @@ include './services/connect_db.php';
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-lg">
-    <div class="container-fluid px-5">
-      <a class="navbar-brand" href="#"><img src="./assets/images/logo.png" alt="logo" class="logo"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Trang chủ</a>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Sản phẩm
-            </a>
-            <ul class="dropdown-menu">
-              <?php
-              $sql = "SELECT name FROM categories";
-              $result = $conn->query($sql);
-
-              if ($result->num_rows > 0) {
-                // output data of each row
-                while ($row = $result->fetch_assoc()) {
-                  $name = $row['name'];
-                  echo "<li><a class='dropdown-item' href='#'>$name</a></li>";
-                }
-              }
-
-              ?>
-
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Liên hệ</a>
-          </li>
-        </ul>
-        <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Sản phẩm" aria-label="Search">
-          <button class="btn btn-outline-success text-nowrap" type="submit">Tìm kiếm</button>
-        </form>
-      </div>
-    </div>
-  </nav>
+  <?php
+  include dirname(__FILE__) . '\components\navbar.php';
+  ?>
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -67,8 +26,8 @@ include './services/connect_db.php';
     </div>
     <div class="carousel-inner">
       <div class="carousel-item  active" data-bs-interval="2000">
-        <img src="./assets/images/banner/banner1.avif" class="d-lg-block d-none w-100 " alt="banner1">
-        <img src="./assets/images/banner/banner1_vertical.avif" class="d-lg-none d-block   " alt="banner1" style="height: 700px;">
+        <img src="./assets/images/banner/banner1.avif" class="d-md-block d-none w-100 " alt="banner1">
+        <img src="./assets/images/banner/banner1_vertical.avif" class="d-md-none d-block   " alt="banner1" style="height: 700px;">
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1 fw-bold">HOLIDAY SALE</h5>
           <p class="mt-4" style="max-width: 500px; ">Ưu đãi lên đến 50%. Giá hiển thị trên trang web là giá bán cuối cùng. Một số sản phẩm ngoại lệ. Điều khoản và Điều kiện đi kèm.</p>
@@ -84,8 +43,8 @@ include './services/connect_db.php';
 
       </div>
       <div class="carousel-item" data-bs-interval="4000">
-        <img src="./assets/images/banner/banner2.avif" class="d-lg-block d-none w-100" alt="banner2">
-        <img src="./assets/images/banner/banner2_vertical.avif" class="d-lg-none d-block " alt="banner2" style="height: 700px;">
+        <img src="./assets/images/banner/banner2.avif" class="d-md-block d-none w-100" alt="banner2">
+        <img src="./assets/images/banner/banner2_vertical.avif" class="d-md-none d-block " alt="banner2" style="height: 700px;">
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">TỎA SÁNG CÙNG SAMBA</h5>
           <p class="" style="max-width: 500px;">Châu Bùi, 24K.RIGHT, Lil Thu, Nick Q Tran tỏa sáng cùng Samba. Bạn thì sao?</p>
@@ -98,8 +57,8 @@ include './services/connect_db.php';
         </div>
       </div>
       <div class="carousel-item" data-bs-interval="4000">
-        <img src="./assets/images/banner/banner3.jpg" class="d-lg-block d-none w-100" alt="banner3">
-        <img src="./assets/images/banner/banner3_vertical.jpg" class="d-lg-none d-block  " alt="banner3" style="height: 700px;">
+        <img src="./assets/images/banner/banner3.jpg" class="d-md-block d-none w-100" alt="banner3">
+        <img src="./assets/images/banner/banner3_vertical.jpg" class="d-md-none d-block  " alt="banner3" style="height: 700px;">
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">ARSENAL X IAN WRIGHT</h5>
           <p class="" style="max-width: 500px;">Tôn vinh ký ức, khoảnh khắc và con người của Huyền thoại Arsenal trong suốt sự nghiệp của anh.</p>
@@ -125,24 +84,12 @@ include './services/connect_db.php';
     <h1 class="fs-1 text-center">Sản phẩm nổi bật</h1>
     <div class="container mt-5">
       <div class="row gy-4">
-        <div class="col-lg-3  col-6">
-          <div class="card w-100 border-0 shadow rounded-4 ">
-            <div class="image-wrapper overflow-hidden rounded-4">
-              <img src="./assets/images/products_test/adizero/Giay_Adizero_Prime_X_2.0_STRUNG_trang_HP9709_HM1.avif" class="card-img-top  shadow-sm card-image " alt="giay adidas">
-            </div>
 
-            <div class="card-body">
-              <h5 class="card-title">Giày Adizero Prime X 2.0</h5>
-              <p class="card-text">3.500.000đ</p>
-
-            </div>
-          </div>
-        </div>
         <?php
 
 
 
-        $sql = "SELECT name, price, imageurl FROM shoes";
+        $sql = "SELECT id,name, price, imageurl FROM shoes";
         $result = $conn->query($sql);
         function moneyFormat($x)
         {
@@ -152,12 +99,13 @@ include './services/connect_db.php';
         if ($result->num_rows > 0) {
           // output data of each row
           while ($row = $result->fetch_assoc()) {
+            $id = $row['id'];
             $name = $row['name'];
             $imageurl = $row['imageurl'];
             $price = moneyFormat($row['price']);
             echo "
             <div class='col-lg-3  col-6'>
-            <div class='card w-100 border-0 shadow rounded-4 '>
+            <a class='card w-100 border-0 shadow rounded-4 ' href='/pages/product.php?id=$id'>
               <div class='image-wrapper overflow-hidden rounded-4'>
                 <img src=' $imageurl ' class='card-img-top  shadow-sm card-image ' alt='giay adidas'>
               </div>
@@ -167,7 +115,7 @@ include './services/connect_db.php';
                 <p class='card-text'> $price đ</p>
   
               </div>
-            </div>
+            </a>
           </div>
             ";
           }

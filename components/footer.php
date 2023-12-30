@@ -1,5 +1,5 @@
 <footer class="bg-black text-white p-5  " style="min-height: 300px; margin-top: 10rem;">
-  <div class="container d-flex flex-lg-row flex-column justify-content-between">
+  <div class="container-fluid px-5 d-flex flex-lg-row flex-column justify-content-between">
 
     <div class="">
       <h1 class="fs-1 fw-bold">ADIDAS</h1>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="">
-      <img src="./assets/images/logo.png" alt="logo" style="width: 300px; filter:invert(100%)">
+      <img src="../assets/images/logo.png" alt="logo" style="max-width: 300px; width: 100%; filter:invert(100%)">
     </div>
 
 
