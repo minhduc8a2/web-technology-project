@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!$userExists) {
                 array_push($errorList, "Thông tin đăng nhập không chính xác.");
             } else {
-                $_SESSION['logined'] = array('id' => $row['id'], 'name' => $row['name'], 'email' => $row['email'], 'address' => $row['address'], 'phoneNumber' => $row['phoneNumber'], 'avatar' => $row['avatar']);
+                $_SESSION['logined'] = array('id' => $row['id'], 'name' => $row['name'], 'email' => $row['email'], 'address' => $row['address'], 'phoneNumber' => $row['phoneNumber'], 'avatar' => $row['avatar'], 'role' => $row['role']);
             }
         } catch (\Throwable $th) {
             //throw $th;

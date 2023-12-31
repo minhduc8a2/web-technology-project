@@ -33,7 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     $_SESSION['shoeList'] = $shoeList;
     exit();
 }
-if (!isset($_SESSION['shoeList'])) {
+
+
+if (!isset($_SESSION['shoeList']) && !isset($_SESSION['create_bill'])) {
     header("location: /pages/cart.php");
     exit();
 }

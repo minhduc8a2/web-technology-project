@@ -3,8 +3,8 @@ require dirname(__DIR__, 1) . '\services\connect_db.php';
 
 $shoesId = $_GET['id'];
 
-$sql = "SELECT shoes.name as name, price,instock, imageurl,description, categories.name as category FROM shoes,categories 
-where shoes.id='$shoesId' and shoes.category=categories.id
+$sql = "SELECT shoes.name as name, price,instock, imageurl,description,  category FROM shoes
+where shoes.id='$shoesId'
 ;";
 $result = $conn->query($sql);
 function moneyFormat($x)
