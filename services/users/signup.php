@@ -8,7 +8,7 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 
 use Cloudinary\Api\Upload\UploadApi;
 
-// (new UploadApi())->upload('logo.png');
+
 
 function validatePhoneNumber($phone)
 {
@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     session_start();
     $errorList = array();
     $signupFormState = array();
+
     if (empty($_POST['name'])) {
         array_push($errorList, "Vui lòng nhập họ tên.");
     } else {
@@ -71,8 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         array_push($errorList, "Mật khẩu không trùng khớp.");
     }
 
-    
-    
+
+
 
     if (count($errorList) == 0) {
         $name = $_POST['name'];
@@ -81,21 +82,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $address = $_POST['address'];
         $password =  $_POST['password'];
 
-        $sqlCheck = "select * from users where phoneNumber='$phoneNumber'";
+        $sqlCheck = "select * from users where phoneNumber='$phoneNumber' and email='$email'";
         try {
             $result = $conn->query($sqlCheck);
             $row = $result->fetch_assoc();
             $phoneExists = (bool)$row;
             if ($phoneExists) {
-                array_push($errorList, "Số điện thoại đã được đăng ký");
+                array_push($errorList, "Số điện thoại đã được đăng ký hoặc email đã được đăng ký.");
             }
         } catch (\Throwable $th) {
             //throw $th;
         }
         if (isset($phoneExists) && !$phoneExists) {
+            if (isset($_FILES['avatar'])) {
+                $file = $_FILES['avatar'];
+                $respone = (new UploadApi())->upload($file['tmp_name']);
+                $avatar = $respone['secure_url'];
+            }
+
+
             $sql = "INSERT INTO users (name,email,phoneNumber,address,password) 
             VALUES ('$name','$email','$phoneNumber', '$address','$password');";
-
+            if (isset($avatar) && !empty($avatar)) {
+                $sql = "INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
+            VALUES ('$name','$email','$phoneNumber', '$address','$password','$avatar');";
+            }
             if ($conn->query($sql) === TRUE) {
 
                 $_SESSION['sign_up'] = true;

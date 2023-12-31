@@ -5,7 +5,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     session_start();
     $input_quantity = $_POST["quantity"];
     $shoeId = $_POST["id"];
-    $userId=1;
+    $userId = $_SESSION['logined']['id'];;
+
     $sql = "UPDATE cartItems SET quantity=$input_quantity WHERE shoeId=$shoeId and userId=$userId";
     try {
         //code...

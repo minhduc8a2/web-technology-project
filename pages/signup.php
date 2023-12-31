@@ -56,16 +56,24 @@ session_start();
                 $phoneNumber = "";
                 $address = "";
                 if (isset($_SESSION['sign_up_form_state'])) {
-                    $name = $_SESSION['sign_up_form_state']['name'];
-                    $email = $_SESSION['sign_up_form_state']['email'];
-                    $phoneNumber = $_SESSION['sign_up_form_state']['phoneNumber'];
-                    $address = $_SESSION['sign_up_form_state']['address'];
+                    if (isset($_SESSION['sign_up_form_state']['name'])) {
+                        $name = $_SESSION['sign_up_form_state']['name'];
+                    }
+                    if (isset($_SESSION['sign_up_form_state']['email'])) {
+                        $email = $_SESSION['sign_up_form_state']['email'];
+                    }
+                    if (isset($_SESSION['sign_up_form_state']['phoneNumber'])) {
+                        $phoneNumber = $_SESSION['sign_up_form_state']['phoneNumber'];
+                    }
+                    if (isset($_SESSION['sign_up_form_state']['address'])) {
+                        $address = $_SESSION['sign_up_form_state']['address'];
+                    }
                     $_SESSION['sign_up_form_state'] = null;
                 }
 
 
                 ?>
-                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-2 shadow rounded-4" enctype="multipart/form-data">
+                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-2 shadow rounded-4" enctype="multipart/form-data" id="form-sign-up">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Họ tên</label>
                         <input type="text" class="form-control" id="inputName" name="name" value='<?= $name ?>'>
@@ -104,7 +112,8 @@ session_start();
 
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    <button class="btn btn-primary" id="submit-btn"><span class="spinner-border spinner-border-sm  me-2" hidden></span>Đăng ký</button>
+                    <p class="mt-4">Đã có tài khoản? <a href="signin.php" class="text-decoration-underline fw-bold text-black">Đăng nhập</a></p>
                 </form>
             </div>
         </div>
@@ -117,6 +126,15 @@ session_start();
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        let submitBtn = document.getElementById('submit-btn')
+        submitBtn.addEventListener('click', () => {
+            submitBtn.disabled = true;
+            document.getElementsByClassName("spinner-border")[0].hidden = false;
+
+            document.getElementById("form-sign-up").submit();
+        })
+    </script>
 </body>
 
 </html>

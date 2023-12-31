@@ -32,15 +32,20 @@ $avatar  = $_SESSION['logined']['avatar'];
     ?>
     <div class="container mt-new-page">
         <div class="row gy-5 ">
-            <div class="col-12 col-lg-6 justify-content-center align-items-center d-flex">
-                <?php
-                if ($avatar == 'user_avatar') {
-                    echo '<img src="../assets/images/user.png" alt="" class="img-fluid  " style="max-width: 300px;">';
-                } else {
-                    echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-block d-none' style='max-width: 450px;'>";
-                    echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-none w-75' >";
-                }
-                ?>
+            <div class="col-12 col-lg-6 ">
+                <h1 class="mb-5">Chức năng người dùng</h1>
+                <div class="d-flex flex-lg-row flex-column p-4 justify-content-start gap-4 align-items-center">
+                    <?php
+                    if ($avatar == 'user_avatar') {
+                        echo '<img src="../assets/images/user.png" alt="" class="img-fluid  " style="max-width: 200px;">';
+                    } else {
+                        echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-block d-none' style='max-width: 200px;'>";
+                        echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-none w-75' >";
+                    }
+                    ?>
+                    <a class="btn btn-dark" style="width: fit-content;" href="/pages/billList.php">Xem đơn hàng</a>
+                </div>
+
 
             </div>
             <div class="col-12 col-lg-6">

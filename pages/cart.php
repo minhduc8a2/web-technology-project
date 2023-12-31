@@ -45,7 +45,7 @@ if (isset($_SESSION["delete_shoe"])) {
                 <ul class="mt-5 p-0 ">
                     <?php
                     $total = 0;
-                    $userId = 1;
+                    $userId = $_SESSION['logined']['id'];
 
                     $sql = "SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity  FROM shoes, cartItems
                     where shoes.id=shoeId and userId='$userId'
@@ -68,6 +68,10 @@ if (isset($_SESSION["delete_shoe"])) {
                             echo "<li class='mt-2'>
                             <div class='cart-item bg-white d-flex flex-lg-row flex-column justify-content-between gap-2 shadow p-4 rounded-2'>
                                 <div class='d-flex align-items-center gap-3'>
+                                <div class='form-check'>
+                                    <input class='form-check-input select-shoe-checkbox' type='checkbox' value='$id'  checked>
+                                
+                                </div>
                                     <img src='https://res.cloudinary.com/dqqetbr1m/image/upload/v1696121189/ducstore/vhcswlkqauz5jxqeah1p.png' alt='image' style='max-width: 100px; width: 100%;' class='rounded-4'>
                                     <div class='description'>
                                         <h5>$shoeName</h5>
@@ -102,7 +106,7 @@ if (isset($_SESSION["delete_shoe"])) {
                 <h2>Thông tin thanh toán</h2>
                 <div class="mt-5 p-5 shadow">
                     <p class=" fs-4 fw-bold  "><span>Tổng cộng: </span> <span class="text-danger"><?= $total ?></span> <span class="text-decoration-underline text-danger">đ</span></p>
-                    <button class="btn btn-primary px-4 py-2 fs-5 rounded-3 mt-4 shadow">Mua hàng</button>
+                    <button class="btn btn-primary px-4 py-2 fs-5 rounded-3 mt-4 shadow" onclick="goToOrder()">Mua hàng</button>
                 </div>
 
             </div>
@@ -113,6 +117,35 @@ if (isset($_SESSION["delete_shoe"])) {
     $conn->close();
     ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function goToOrder() {
+            let shoeList = []
+            let checkboxList = document.getElementsByClassName('select-shoe-checkbox');
+            for (let index = 0; index < checkboxList.length; index++) {
+                const element = checkboxList[index];
+
+                if (element.checked) shoeList.push(element.value);
+
+            }
+            if (shoeList.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "order.php",
+                    data: {
+                        shoeList: shoeList
+                    }
+                }, ).done(function(msg) {
+                    location.href = "order.php"
+                });
+            }
+
+
+
+
+
+        }
+    </script>
 </body>
 
 </html>

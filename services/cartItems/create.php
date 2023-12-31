@@ -6,7 +6,7 @@ if (!isset($_SESSION["logined"])) {
     header("location: /pages/login.php");
 } else 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST["id"])) {
-    $userId = "1";
+    $userId = $_SESSION['logined']['id'];;
     $shoeId = $_POST["id"];
 
     $sql = "INSERT INTO cartItems (userId,shoeId) VALUES ('$userId','$shoeId');";

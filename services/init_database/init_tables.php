@@ -80,3 +80,45 @@ try {
 } catch (\Throwable $th) {
     echo $th;
 }
+
+try {
+    $sql = "CREATE TABLE bills (
+        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        userId INT(6) UNSIGNED NOT NULl,
+        userName  VARCHAR(100) NOT NULL,
+        phoneNumber VARCHAR(100) NOT NULL,
+        address VARCHAR(100) NOT NULL,
+        discount INT NOT NULL default 0,
+        status VARCHAR(50) NOT NULL default 'pending',
+        total INT NOT NULL default 0,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+       
+        );";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('bills tables created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
+
+try {
+    $sql = "CREATE TABLE billItems (
+        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        billId INT(6) NOT NULL,
+        shoeId INT(6) NOT NULL,
+        price INT NOT NULL,
+        quantity INT NOT NULL,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+       
+        );";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('billitems tables created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}

@@ -1,10 +1,14 @@
 <?php
 require_once dirname(__DIR__, 1) . '\connect_db.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST["id"])) {
+if (!isset($_SESSION["logined"])) {
+
+    header("location: /pages/login.php");
+} else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST["id"])) {
     session_start();
     $shoeId = $_POST["id"];
-    $userId = 1;
+    $userId = $_SESSION['logined']['id'];;
+
     $sql = "delete from cartItems WHERE shoeId=$shoeId and userId=$userId";
     try {
 

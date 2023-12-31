@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap");
+
 .logo {
   width: 80px;
 }
@@ -70,4 +72,8 @@ a {
 
 ul {
   list-style: none;
+}
+
+* {
+  font-family: "Inter", sans-serif;
 }

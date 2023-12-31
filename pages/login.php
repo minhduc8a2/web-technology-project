@@ -33,9 +33,9 @@ if (isset($_SESSION['logined'])) {
                 if (isset($_SESSION['error_list'])) {
                     foreach ($_SESSION['error_list'] as &$value) {
                         echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-             $value
-            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-          </div>";
+                $value
+                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
                     }
                     $_SESSION['error_list'] = null;
                 }
@@ -67,6 +67,7 @@ if (isset($_SESSION['logined'])) {
                     </div>
 
                     <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    <p class="mt-4">Chưa có tài khoản? <a href="signup.php" class="text-decoration-underline fw-bold text-black">Đăng ký</a></p>
                 </form>
             </div>
         </div>
