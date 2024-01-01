@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 1) . '\services\connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/connect_db.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

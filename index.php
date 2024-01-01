@@ -1,5 +1,5 @@
 <?php
-include './services/connect_db.php';
+include dirname(__FILE__) . '/services/connect_db.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +16,7 @@ include './services/connect_db.php';
 
 <body>
   <?php
-  include dirname(__FILE__) . '\components\navbar.php';
+  include dirname(__FILE__) . '/components/navbar.php';
   ?>
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">

@@ -1,5 +1,5 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
+require dirname(__DIR__, 1) . '/connect_db.php';
 
 //shoes table
 try {
@@ -111,7 +111,7 @@ try {
         shoeId INT(6) NOT NULL,
         price INT NOT NULL,
         quantity INT NOT NULL,
-        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (billId)
         REFERENCES bills (id)
         ON DELETE CASCADE
@@ -132,12 +132,12 @@ try {
     FOR EACH ROW 
     BEGIN
         DECLARE currentQuantity INT;
-          -- Fetch the current quantity from shoes
+          
         SELECT instock INTO currentQuantity
         FROM shoes
         WHERE shoes.id = NEW.shoeId;
     
-        -- Check if the amount is less than the current quantity
+        
         IF NEW.quantity < currentQuantity THEN
             UPDATE shoes
             SET shoes.instock = shoes.instock - NEW.quantity
