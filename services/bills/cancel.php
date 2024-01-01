@@ -9,9 +9,13 @@ if (!isset($_SESSION["logined"])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST["id"])) {
     session_start();
     $billId = $_POST["id"];
-
-
-    $sql = "UPDATE bills SET status = 'cancel' WHERE id='$billId';";
+    $userId = $_SESSION['logined']['id'];
+    $role = $_SESSION['logined']['role'];
+    
+    $sql = "UPDATE bills SET status = 'cancel' WHERE id='$billId' and userId='$userid' ;";
+    if($role == 'admin') {
+        $sql = "UPDATE bills SET status = 'cancel' WHERE id='$billId' ;";
+    }
     try {
 
         if ($conn->query($sql) === TRUE) {

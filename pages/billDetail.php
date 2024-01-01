@@ -7,18 +7,24 @@ if (!isset($_SESSION['logined'])) {
 }
 
 $billId = $_GET['id'];
+$userId = $_SESSION['logined']['id'];
+$role = $_SESSION['logined']['role'];
+
 
 
 
 //get bill
-$sql = "select* from bills where id=$billId;";
+$sql = "select* from bills where id=$billId and userId='$userId';";
+if ($role == 'admin') {
+    $sql = "select* from bills where id=$billId ;";
+}
 try {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         // output data of each row
         $bill = $result->fetch_assoc();
         //get bill items
-        $sql = "select name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = $billId and billItems.shoeId = shoes.id;";
+        $sql = "select name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = $billId and billItems.shoeId = shoes.id ;";
         $result = $conn->query($sql);
         $shoeList = [];
         if ($result->num_rows > 0) {
