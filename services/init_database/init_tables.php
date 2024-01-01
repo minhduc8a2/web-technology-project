@@ -107,12 +107,14 @@ try {
 try {
     $sql = "CREATE TABLE billItems (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        billId INT(6) NOT NULL,
+        billId INT(6) unsigned not null,
         shoeId INT(6) NOT NULL,
         price INT NOT NULL,
         quantity INT NOT NULL,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-       
+        FOREIGN KEY (billId)
+        REFERENCES bills (id)
+        ON DELETE CASCADE
         );";
 
     if ($conn->query($sql) === TRUE) {
@@ -141,6 +143,9 @@ try {
             SET shoes.instock = shoes.instock - NEW.quantity
             WHERE shoes.id = NEW.shoeId;
         END IF;
+        UPDATE shoes
+	    SET shoes.sold = shoes.sold + NEW.quantity
+	    WHERE shoes.id = NEW.shoeId;
     END$$
     
     DELIMITER ;";

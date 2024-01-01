@@ -13,48 +13,48 @@ if (isset($_SESSION['logined']) && $_SESSION['logined']['role'] != 'admin') {
     exit();
 }
 
-$shoeList = [];
-$sql = "select* from shoes ;";
+$sql = "select* from bills ;";
+$billList = [];
 try {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         // output data of each row
         while ($row = $result->fetch_assoc()) {
-            array_push($shoeList, $row);
+            array_push($billList, $row);
         }
     }
 } catch (\Throwable $th) {
     echo 'Error with server.';
     exit();
 }
-if (isset($_SESSION['update_shoe'])) {
-    if ($_SESSION['update_shoe']['state'] == true) {
-        echo '<script>alert("Cập nhật thành công!")</script>';
+if (isset($_SESSION['change_status_bill'])) {
+    if ($_SESSION['change_status_bill'] == true) {
+        echo '<script>alert("Đổi trạng thái đơn hàng thành công!")</script>';
     } else {
 
-        echo '<script>alert("Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';;
+        echo '<script>alert("Đổi trạng thái đơn hàng thất bại, vui lòng thử lại sau.")</script>';;
     }
-    unset($_SESSION['update_shoe']);
+    unset($_SESSION['change_status_bill']);
 }
-if (isset($_SESSION['create_shoe'])) {
-    if ($_SESSION['create_shoe']['state'] == true) {
-        echo '<script>alert("Tạo sản phẩm thành công!")</script>';
-    } else {
+// if (isset($_SESSION['create_bill'])) {
+//     if ($_SESSION['create_bill']['state'] == true) {
+//         echo '<script>alert("Tạo sản phẩm thành công!")</script>';
+//     } else {
 
-        echo '<script>alert("Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';
-    }
-    unset($_SESSION['create_shoe']);
-}
+//         echo '<script>alert("Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';
+//     }
+//     unset($_SESSION['create_bill']);
+// }
 
-if (isset($_SESSION['delete_shoe'])) {
-    if ($_SESSION['delete_shoe'] == true) {
-        echo '<script>alert("Xóa sản phẩm thành công!")</script>';
-    } else {
+// if (isset($_SESSION['delete_bill'])) {
+//     if ($_SESSION['delete_bill'] == true) {
+//         echo '<script>alert("Xóa sản phẩm thành công!")</script>';
+//     } else {
 
-        echo '<script>alert("Xóa sản phẩm thất bại, vui lòng thử lại sau.")</script>';
-    }
-    unset($_SESSION['delete_shoe']);
-}
+//         echo '<script>alert("Xóa sản phẩm thất bại, vui lòng thử lại sau.")</script>';
+//     }
+//     unset($_SESSION['delete_bill']);
+// }
 
 ?>
 
@@ -99,146 +99,84 @@ if (isset($_SESSION['delete_shoe'])) {
             }
 
             ?>
-            <div class="accordion" id="accordionExample">
-                <div class='accordion-item'>
-                    <h2 class='accordion-header'>
-                        <button class='accordion-button collapsed text-uppercase' type='button' data-bs-toggle='collapse' data-bs-target='#collapseCreate' aria-expanded='false' aria-controls='collapseCreate'>
-                            Tạo sản phẩm mới
-                        </button>
-                    </h2>
-                    <div id='collapseCreate' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
-                        <div class='accordion-body'>
-                            <form action='/services/shoes/create.php' method='post' class='p-lg-5 p-2 shadow rounded-4' enctype='multipart/form-data'>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Tên giày</label>
-                                    <input type='text' class='form-control' name='name' value='Example'>
 
-                                </div>
-
-                                <div class=' mb-3'>
-                                    <label class='form-label'>Loại giày</label>
-                                    <input type='text' class='form-control' name='category' value='Example'>
-
-                                </div>
-                                <div class=' mb-3'>
-                                    <label class='form-label'>Mô tả</label>
-                                    <input type='text' class='form-control' name='description' value='Example'>
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Giá bán</label>
-                                    <input type='number' class='form-control' name='price' min=1000 value=1000000>
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Tồn kho</label>
-                                    <input type='text' class='form-control' name='instock' min=1 value=100>
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Đã bán</label>
-                                    <input type='number' class='form-control' name='sold' value=0>
-
-                                </div>
-
-
-                                <div class='mb-3'>
-                                    <label class='form-label'>Ảnh sản phẩm</label>
-                                    <div class='input-group mb-4'>
-                                        <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="create">
-                                <button class='btn btn-danger' type='submit'><span class='spinner-border spinner-border-sm  me-2' hidden></span>Tạo sản phẩm mới</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
+            <ul class="mt-5 p-0 ">
                 <?php
-                foreach ($shoeList as &$shoe) {
 
-                    $shoeName = $shoe['name'];
-                    $id = $shoe['id'];
-                    $category = $shoe['category'];
-                    $description = $shoe['description'];
-                    $price = $shoe['price'];
-                    $instock = $shoe['instock'];
-                    $sold = $shoe['sold'];
-                    $imageurl = $shoe['imageurl'];
-                    echo "
-                <div class='accordion-item'>
-                    <h2 class='accordion-header'>
-                        <button class='accordion-button collapsed text-uppercase' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$id' aria-expanded='false' aria-controls='collapse$id'>
-                            $shoeName
-                        </button>
-                    </h2>
-                    <div id='collapse$id' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
-                        <div class='accordion-body'>
-                            <form action='/services/shoes/delete.php' method='post' class='m-0 d-flex align-items-center shadow-sm p-4 rounded-4'>
-                                <input type='hidden' name='id' value='$id'/>
-                                <input type='hidden' name='imageurl' value='$imageurl'/>
-                                <button class='border-0 bg-transparent text-danger fs-5' type='submit'>Xóa sản phẩm <i class='fa-solid fa-trash-can'></i></button>
-                            </form> 
-                            <form action='/services/shoes/update.php' method='post' class='p-lg-5 p-2 shadow rounded-4 mt-4' enctype='multipart/form-data'>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Tên giày</label>
-                                    <input type='text' class='form-control' name='name' value=' $shoeName '>
-
-                                </div>
-
-                                <div class=' mb-3'>
-                                    <label class='form-label'>Loại giày</label>
-                                    <input type='text' class='form-control' name='category' value=' $category '>
-
-                                </div>
-                                <div class=' mb-3'>
-                                    <label class='form-label'>Mô tả</label>
-                                    <input type='text' class='form-control' name='description' value='$description'>
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Giá bán</label>
-                                    <input type='number' class='form-control' name='price' min=0 value= $price >
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Tồn kho</label>
-                                    <input type='text' class='form-control' name='instock' value= $instock >
-
-                                </div>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Đã bán</label>
-                                    <input type='number' class='form-control' name='sold' value= $sold >
-
-                                </div>  
-                                <input type='hidden' name='imageurl' value='$imageurl'/>
-                                <input type='hidden' name='id' value='$id'/>
-                                <div class='d-flex gap-4 align-items-center my-4'>
-                                    <div class='border-end pe-4'>
-                                        <p>Ảnh hiện tại</p>
-                                        <img src='$imageurl' class='rounded-2' alt='preview' style='width:200px;'>
-                                    </div>
-                                    
-                                    <div class='mb-3'>
-                                        <label class='form-label'>Chọn ảnh mới</label>
-                                        <div class='input-group mb-4'>
-                                            <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
-                                        </div>
-                                    </div>
-                                </div>
-                               
-                                <button class='btn btn-danger' type='submit'><span class='spinner-border spinner-border-sm  me-2' hidden></span>Cập nhật</button>
-                            </form>
-                            
-                        </div>
-                    </div>
-                </div>
-                        ";
+                function moneyFormat($x)
+                {
+                    return str_replace(',', '.', strval(number_format($x)));
                 }
-                ?>
 
-            </div>
+                foreach ($billList as &$row) {
+                    $id = $row['id'];
+                    $userName = $row['userName'];
+                    $phoneNumber = $row['phoneNumber'];
+                    $address = $row['address'];
+                    $createdAt = $row['createdAt'];
+                    $status = $row['status'];
+                    $total = moneyFormat($row['total']);
+                    echo "
+                <li class='p-4 shadow rounded-2 mt-4'>
+                    <div class='d-flex gap-2 align-items-center mb-2'>
+                        <a class='fs-6  text-decoration-underline fw-bold text-black' href='/pages/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
+                        <form action='/services/bills/delete.php' method='post' class='m-0 d-flex align-items-center '>
+                            <input type='hidden' name='id' value='$id'/>
+                          
+                            <button class='border-0 bg-transparent text-danger fs-5' type='submit'> <i class='fa-solid fa-trash-can'></i></button>
+                        </form> 
+                        
+                    </div>
+
+                    <p class=' mb-2'>Đơn hàng được tạo lúc: <span class='fw-bold'>$createdAt</span></p>
+                    <p class=' mb-2'>Người nhận: <span class='fw-bold'>$userName</span> </p>
+                    <p class=' mb-2'>Số điện thoại: <span class='fw-bold'>$phoneNumber</span> </p>
+                    <p class=' mb-2'>Địa chỉ giao hàng: <span class='fw-bold'>$address</span> </p>
+                    <p class=' mb-2'>Trạng thái đơn hàng: </p>
+                    
+                    <form action='/services/bills/updateStatus.php' method='post' style='width:250px;'>
+                        <select class='form-select fw-bold text-danger mb-2' name='status' onchange='enableSubmitStatus($id)'>
+                            <option value='cancel'
+                             ";
+                    if ($status == 'cancel') echo 'selected';
+                    echo "   
+                            >Đã hủy</option>
+                            <option value='pending'
+                             ";
+                    if ($status == 'pending') echo 'selected';
+                    echo "   
+                            >Chờ xử lý</option>
+                            <option value='processing'
+                             ";
+                    if ($status == 'processing') echo 'selected';
+                    echo "   
+                            >Đang xử lý</option>
+                            <option value='delivering'
+                             ";
+                    if ($status == 'delivering') echo 'selected';
+                    echo "   
+                            >Đang vận chuyển</option>
+                            <option value='delivered'
+                             ";
+                    if ($status == 'delivered') echo 'selected';
+                    echo "   
+                            >Đã giao thành công</option>
+                        </select>
+                        <input type='hidden' name='id' value='$id'>
+                        <button disabled class='btn btn-danger' type='submit' id = 'change-btn-$id'>Xác nhận</button>
+                    </form>
+                    <hr>
+                    <p class='fs-4 mt-4 mb-2 text-end'>Tổng tiền: <span class='fw-bold text-danger'>$total</span> </p>
+
+                    
+                </li>
+                ";
+                }
+
+
+
+                ?>
+            </ul>
 
         </main>
     </div>
@@ -250,6 +188,16 @@ if (isset($_SESSION['delete_shoe'])) {
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        function enableSubmitStatus(id) {
+
+            console.log('change-btn-' + id)
+            changeButton = document.getElementById('change-btn-' + id);
+            console.log(changeButton);
+            changeButton.disabled = false;
+        }
+    </script>
+
 </body>
 
 </html>
