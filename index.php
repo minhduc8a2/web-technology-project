@@ -89,7 +89,7 @@ include './services/connect_db.php';
 
 
 
-        $sql = "SELECT id,name, price, imageurl FROM shoes";
+        $sql = "SELECT id,name, price, imageurl FROM shoes limit 10";
         $result = $conn->query($sql);
         function moneyFormat($x)
         {

@@ -24,14 +24,15 @@ if (session_status() === PHP_SESSION_NONE) {
                     </a>
                     <ul class="dropdown-menu">
                         <?php
-                        $sql = "SELECT name FROM categories";
+                        $sql = "SELECT name, id FROM categories";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
                             // output data of each row
                             while ($row = $result->fetch_assoc()) {
                                 $name = $row['name'];
-                                echo "<li><a class='dropdown-item' href='#'>$name</a></li>";
+                                $id = $row['id'];
+                                echo "<li><a class='dropdown-item' href='/pages/category.php?categoryId=$id'>$name</a></li>";
                             }
                         }
 
@@ -43,8 +44,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <a class="nav-link" href="#footer">Liên hệ</a>
                 </li>
             </ul>
-            <form class="d-flex mb-0" role="search">
-                <input class="form-control me-2" type="search" placeholder="Sản phẩm" aria-label="Search">
+            <form action="/pages/search.php" class="d-flex mb-0" method="get">
+                <input class="form-control me-2" placeholder="Sản phẩm" name="search">
                 <button class="btn btn-outline-success text-nowrap" type="submit">Tìm kiếm</button>
             </form>
             <div class="py-4 py-lg-0">
