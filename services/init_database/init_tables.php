@@ -5,7 +5,7 @@ require dirname(__DIR__, 1) . '\connect_db.php';
 try {
     $sql = "CREATE TABLE shoes (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
+        name VARCHAR(200) NOT NULL,
         category VARCHAR(100) NOT NULL,
         description VARCHAR(1000) NOT NULL,
         updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -118,6 +118,93 @@ try {
     if ($conn->query($sql) === TRUE) {
 
         echo "<script>console.log('billitems tables created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
+try {
+    $sql = "DELIMITER $$
+
+    CREATE TRIGGER auto_update_on_shoes_when_create_bill 
+    AFTER INSERT ON billItems
+    FOR EACH ROW 
+    BEGIN
+        DECLARE currentQuantity INT;
+          -- Fetch the current quantity from shoes
+        SELECT instock INTO currentQuantity
+        FROM shoes
+        WHERE shoes.id = NEW.shoeId;
+    
+        -- Check if the amount is less than the current quantity
+        IF NEW.quantity < currentQuantity THEN
+            UPDATE shoes
+            SET shoes.instock = shoes.instock - NEW.quantity
+            WHERE shoes.id = NEW.shoeId;
+        END IF;
+    END$$
+    
+    DELIMITER ;";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('trigger auto decrease quantity on instock created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
+
+try {
+    $sql = "DELIMITER $$
+
+    CREATE TRIGGER auto_create_category 
+    AFTER INSERT ON shoes
+    FOR EACH ROW 
+    BEGIN
+        IF NOT EXISTS ( SELECT * FROM categories where name = NEW.category) then
+            INSERT INTO categories (name) values (NEW.category);
+        end if;
+    END$$
+    
+    DELIMITER ;
+    
+    DELIMITER $$
+    
+    CREATE TRIGGER auto_create_category_on_update
+    AFTER UPDATE ON shoes
+    FOR EACH ROW 
+    BEGIN
+        IF NOT EXISTS ( SELECT * FROM categories where name = NEW.category) then
+            INSERT INTO categories (name) values (NEW.category);
+        end if;
+    END$$
+    
+    DELIMITER ;";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('trigger auto create category  created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
+
+try {
+    $sql = "DELIMITER $$
+
+    CREATE TRIGGER auto_delete_category_on_delete
+    AFTER DELETE ON shoes
+    FOR EACH ROW 
+    BEGIN
+        IF NOT EXISTS ( SELECT * FROM shoes where OLD.category = shoes.category) then
+            delete from categories where categories.name = OLD.category;
+        end if;
+    END$$
+    
+    DELIMITER ;";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('trigger auto delete category  created successfully')</script>";
     }
 } catch (\Throwable $th) {
     echo $th;

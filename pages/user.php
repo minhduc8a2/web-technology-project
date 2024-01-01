@@ -43,7 +43,15 @@ $avatar  = $_SESSION['logined']['avatar'];
                         echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-none w-75' >";
                     }
                     ?>
-                    <a class="btn btn-dark" style="width: fit-content;" href="/pages/billList.php">Xem đơn hàng</a>
+                    <div class="d-flex flex-column gap-2 align-items-start">
+                        <a class="btn btn-dark" style="width: fit-content;" href="/pages/billList.php">Xem đơn hàng</a>
+                        <?php
+                        if ($_SESSION['logined']['role'] == 'admin') {
+                            echo '<a class="btn btn-danger" style="width: fit-content;" href="/pages/admin.php">Quản lý website</a>';
+                        }
+                        ?>
+                    </div>
+
                 </div>
 
 

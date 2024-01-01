@@ -14,7 +14,7 @@ if (isset($_SESSION['logined']) && $_SESSION['logined']['role'] != 'admin') {
 }
 
 $shoeList = [];
-$sql = "select* from shoes limit 10 offset 0;";
+$sql = "select* from shoes ;";
 try {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
@@ -29,12 +29,21 @@ try {
 }
 if (isset($_SESSION['update_shoe'])) {
     if ($_SESSION['update_shoe']['state'] == true) {
-        echo '<script>alert("Update successfully")</script>';
+        echo '<script>alert("Cập nhật thành công!")</script>';
     } else {
-        echo '<script>alert("Failed to update")</script>';;
+
+        echo '<script>alert("Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';;
     }
     unset($_SESSION['update_shoe']);
-    unset($_SESSION['error_list']);
+}
+if (isset($_SESSION['create_shoe'])) {
+    if ($_SESSION['create_shoe']['state'] == true) {
+        echo '<script>alert("Tạo sản phẩm thành công!")</script>';
+    } else {
+
+        echo '<script>alert("Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';;
+    }
+    unset($_SESSION['create_shoe']);
 }
 
 ?>
@@ -68,13 +77,81 @@ if (isset($_SESSION['update_shoe'])) {
             </li>
         </ul>
         <main class="mt-5">
+            <?php
+            if (isset($_SESSION['error_list'])) {
+                foreach ($_SESSION['error_list']['errorList'] as &$value) {
+                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        $value
+                       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                     </div>";
+                }
+                unset($_SESSION['error_list']);
+            }
+
+            ?>
             <div class="accordion" id="accordionExample">
+                <div class='accordion-item'>
+                    <h2 class='accordion-header'>
+                        <button class='accordion-button collapsed text-uppercase' type='button' data-bs-toggle='collapse' data-bs-target='#collapseCreate' aria-expanded='false' aria-controls='collapseCreate'>
+                            Tạo sản phẩm mới
+                        </button>
+                    </h2>
+                    <div id='collapseCreate' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
+                        <div class='accordion-body'>
+                            <form action='/services/shoes/create.php' method='post' class='p-lg-5 p-2 shadow rounded-4' enctype='multipart/form-data'>
+                                <div class='mb-3'>
+                                    <label class='form-label'>Tên giày</label>
+                                    <input type='text' class='form-control' name='name' value='Example'>
+
+                                </div>
+
+                                <div class=' mb-3'>
+                                    <label class='form-label'>Loại giày</label>
+                                    <input type='text' class='form-control' name='category' value='Example'>
+
+                                </div>
+                                <div class=' mb-3'>
+                                    <label class='form-label'>Mô tả</label>
+                                    <input type='text' class='form-control' name='description' value='Example'>
+
+                                </div>
+                                <div class='mb-3'>
+                                    <label class='form-label'>Giá bán</label>
+                                    <input type='number' class='form-control' name='price' min=1000 value=1000000>
+
+                                </div>
+                                <div class='mb-3'>
+                                    <label class='form-label'>Tồn kho</label>
+                                    <input type='text' class='form-control' name='instock' min=1 value=100>
+
+                                </div>
+                                <div class='mb-3'>
+                                    <label class='form-label'>Đã bán</label>
+                                    <input type='number' class='form-control' name='sold' value=0>
+
+                                </div>
+
+
+                                <div class='mb-3'>
+                                    <label class='form-label'>Ảnh sản phẩm</label>
+                                    <div class='input-group mb-4'>
+                                        <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="create">
+                                <button class='btn btn-danger' type='submit'><span class='spinner-border spinner-border-sm  me-2' hidden></span>Tạo sản phẩm mới</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <?php
                 foreach ($shoeList as &$shoe) {
 
                     $shoeName = $shoe['name'];
                     $id = $shoe['id'];
                     $category = $shoe['category'];
+                    $description = $shoe['description'];
                     $price = $shoe['price'];
                     $instock = $shoe['instock'];
                     $sold = $shoe['sold'];
@@ -83,7 +160,7 @@ if (isset($_SESSION['update_shoe'])) {
                 <div class='accordion-item'>
                     <h2 class='accordion-header'>
                         <button class='accordion-button collapsed text-uppercase' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$id' aria-expanded='false' aria-controls='collapse$id'>
-                            Giày adizero adios pro 3M
+                            $shoeName
                         </button>
                     </h2>
                     <div id='collapse$id' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
@@ -98,6 +175,11 @@ if (isset($_SESSION['update_shoe'])) {
                                 <div class=' mb-3'>
                                     <label class='form-label'>Loại giày</label>
                                     <input type='text' class='form-control' name='category' value=' $category '>
+
+                                </div>
+                                <div class=' mb-3'>
+                                    <label class='form-label'>Mô tả</label>
+                                    <input type='text' class='form-control' name='description' value='$description'>
 
                                 </div>
                                 <div class='mb-3'>
@@ -117,12 +199,20 @@ if (isset($_SESSION['update_shoe'])) {
                                 </div>  
                                 <input type='hidden' name='imageurl' value='$imageurl'/>
                                 <input type='hidden' name='id' value='$id'/>
-                                <div class='mb-3'>
-                                    <label class='form-label'>Ảnh sản phẩm</label>
-                                    <div class='input-group mb-4'>
-                                        <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
+                                <div class='d-flex gap-4 align-items-center my-4'>
+                                    <div class='border-end pe-4'>
+                                        <p>Ảnh hiện tại</p>
+                                        <img src='$imageurl' class='rounded-2' alt='preview' style='width:200px;'>
+                                    </div>
+                                    
+                                    <div class='mb-3'>
+                                        <label class='form-label'>Chọn ảnh mới</label>
+                                        <div class='input-group mb-4'>
+                                            <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
+                                        </div>
                                     </div>
                                 </div>
+                               
                                 <button class='btn btn-danger' type='submit'><span class='spinner-border spinner-border-sm  me-2' hidden></span>Cập nhật</button>
                             </form>
                         </div>

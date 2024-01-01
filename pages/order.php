@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
 
     $sql = "select shoes.name as name,shoes.id as id, price, imageurl, quantity from shoes, cartItems where shoes.id=shoeId and userId='$userId' and (shoes.id = " . $shoeListId[0];
     for ($i = 1; $i < count($shoeListId); $i++) {
-        $sql = $sql . "OR shoes.id = " . $shoeListId[$i];
+        $sql = $sql . " OR shoes.id = " . $shoeListId[$i];
     }
     $sql = $sql . ");";
 
@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     } catch (\Throwable $th) {
         echo 'Error with server.';
     }
+
     $_SESSION['shoeList'] = $shoeList;
     exit();
 }
@@ -104,7 +105,7 @@ if (!isset($_SESSION['shoeList']) && !isset($_SESSION['create_bill'])) {
                         echo "<li class='mt-2'>
                             <div class='cart-item bg-white d-flex flex-lg-row flex-column justify-content-between gap-2 shadow p-4 rounded-2'>
                                 <div class='d-flex align-items-center gap-3'>
-                                    <img src='https://res.cloudinary.com/dqqetbr1m/image/upload/v1696121189/ducstore/vhcswlkqauz5jxqeah1p.png' alt='image' style='max-width: 100px; width: 100%;' class='rounded-4'>
+                                    <img src='$imageurl' alt='image' style='max-width: 100px; width: 100%;' class='rounded-4'>
                                     <div class='description'>
                                         <h5>$shoeName</h5>
                                         <h6 class='text-danger'>$price <span class='text-decoration-underline'>đ</span></h6>

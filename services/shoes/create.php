@@ -1,22 +1,112 @@
 <?php
 require dirname(__DIR__, 1) . '\connect_db.php';
-$name = "GIÀY ADIZERO ADIOS PRO 3M";
-$category = "Giày chạy bộ";
-$description = "ĐÔI GIÀY CHẠY BỘ ĐƯỜNG DÀI SIÊU NHẸ CÓ SỬ DỤNG CHẤT LIỆU TÁI CHẾ. Giày Adizero Adios Pro 3 là đỉnh cao của các sản phẩm Adizero Racing. Giày được thiết kế với sự tham gia của vận động viên và dành cho vận động viên nhằm làm nên kỳ tích. Đôi giày chạy bộ adidas này có khả năng tối ưu hóa hiệu quả chạy bộ. Các thanh carbon ENERGYROD tạo độ cứng siêu nhẹ cho sải bước gọn ghẽ, hiệu quả. Lớp đệm LIGHTSTRIKE PRO siêu nhẹ nâng niu từng bước chạy nhờ kết cấu hai lớp mút foam đàn hồi nhất của adidas giúp bạn giữ sức đường dài. Bên dưới là một lớp mỏng đế ngoài bằng cao su dệt cho độ bám vượt trội trong điều kiện khô ráo cũng như ẩm ướt.";
-$price = 3500000;
-$instock = 100;
-$sold = 0;
-$imageurl = "https://res.cloudinary.com/dqqetbr1m/image/upload/v1696121189/ducstore/vhcswlkqauz5jxqeah1p.png";
-$imageid = "ducstore/vqcekybubd4qbcrx07yi";
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
+use Cloudinary\Configuration\Configuration;
 
-$sql = "INSERT INTO shoes (name,description, category, price,sold, instock,imageurl,imageid)
-VALUES ('$name','$description', '$category', '$price','$sold', '$instock', '$imageurl','$imageid');";
+Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp8@dqqetbr1m?secure=true');
 
-if ($conn->query($sql) === TRUE) {
-    echo "<script>console.log('New record created successfully')</script>";
-} else {
-    echo "<script>console.log('Failed to create')</script>";
+use Cloudinary\Api\Upload\UploadApi;
+
+session_start();
+if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["logined"]['role'] != "admin")) {
+
+    header("location: /pages/login.php");
+    exit('Unauthenticated');
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create'])) {
+
+    $errorList = array();
+
+    if (empty($_POST['name'])) {
+        array_push($errorList, "Vui lòng nhập tên sản phẩm");
+    } else {
+    }
+    if (empty($_POST['category'])) {
+        array_push($errorList, "Vui lòng nhập loại sản phẩm.");
+    }
+    if (empty($_POST['description'])) {
+        array_push($errorList, "Vui lòng nhập mô tả sản phẩm.");
+    }
+    if (empty($_POST['price'])) {
+        array_push($errorList, "Vui lòng nhập giá sản phẩm.");
+    }
+    if (empty($_POST['instock'])) {
+        array_push($errorList, "Vui lòng nhập số lượng tồn kho.");
+    }
+    try {
+        if (empty($_POST['sold']) && $_POST['sold'] != 0) {
+            array_push($errorList, "Vui lòng nhập số lượng đã bán.");
+        }
+    } catch (\Throwable $e) {
+        if (empty($_POST['sold'])) {
+            array_push($errorList, "Vui lòng nhập số lượng đã bán.");
+        }
+    }
+
+    if (isset($_FILES['imageFile']) && $_FILES['imageFile']['error'] != 0) {
+
+        array_push($errorList, "Vui lòng chọn ảnh sản phẩm");
+    }
+
+
+
+    if (count($errorList) == 0) {
+        $name = trim($_POST['name']);
+        $category = trim($_POST['category']);
+        $description = trim($_POST['description']);
+        $price = $_POST['price'];
+        $instock = $_POST['instock'];
+        $sold =  $_POST['sold'];
+
+
+        $uploadOK = true;
+
+
+
+        try {
+
+            $file = $_FILES['imageFile'];
+
+            $respone = (new UploadApi())->upload($file['tmp_name']);
+            $imageurl = $respone['secure_url'];
+            $imageId = $respone['public_id'];
+        } catch (\Throwable $th) {
+            echo $th;
+            exit();
+        }
+
+
+
+        $sql = "INSERT INTO shoes (name, description,category, price,sold, instock,imageurl)
+        VALUES ('$name','$description','$category','$price','$sold','$instock','$imageurl') ;";
+        try {
+            if ($conn->query($sql) === TRUE) {
+
+                $_SESSION['create_shoe'] = array('id' => $id, 'state' => true);
+            } else {
+                $_SESSION['create_shoe'] = array('id' => $id, 'state' => false);
+            }
+        } catch (\Throwable $th) {
+            echo $th;
+            echo $sql;
+            (new UploadApi())->destroy($imageId);
+            exit();
+        }
+    }
+    if (count($errorList) != 0) {
+        $_SESSION['error_list'] = array('id' => $_POST['id'], 'errorList' => $errorList);
+    }
+
+    header("location: /pages/admin.php");
+} else {
+    echo "Unauthenticated";
+}
+
+
+
+
+
 
 $conn->close();

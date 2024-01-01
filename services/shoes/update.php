@@ -26,6 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     if (empty($_POST['category'])) {
         array_push($errorList, "Vui lòng nhập loại sản phẩm.");
     }
+    if (empty($_POST['description'])) {
+        array_push($errorList, "Vui lòng nhập mô tả sản phẩm.");
+    }
     if (empty($_POST['price'])) {
         array_push($errorList, "Vui lòng nhập giá sản phẩm.");
     }
@@ -49,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     if (count($errorList) == 0) {
         $name = trim($_POST['name']);
         $category = trim($_POST['category']);
+        $description = trim($_POST['description']);
         $price = $_POST['price'];
         $instock = $_POST['instock'];
         $sold =  $_POST['sold'];
@@ -71,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
         }
 
 
-        $sql = "UPDATE shoes SET name='$name', price='$price', category='$category', instock = '$instock', sold = '$sold', imageurl = '$imageurl' WHERE id='$id';";
+        $sql = "UPDATE shoes SET name='$name', description='$description',  price='$price', category='$category', instock = '$instock', sold = '$sold', imageurl = '$imageurl' WHERE id='$id';";
         try {
             if ($conn->query($sql) === TRUE && $uploadOK) {
 
