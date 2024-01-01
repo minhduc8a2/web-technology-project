@@ -36,8 +36,9 @@ $avatar  = $_SESSION['logined']['avatar'];
                 <h1 class="mb-5">Chức năng người dùng</h1>
                 <div class="d-flex flex-lg-row flex-column p-4 justify-content-start gap-4 align-items-center">
                     <?php
-                    if ($avatar == 'user_avatar') {
-                        echo '<img src="../assets/images/user.png" alt="" class="img-fluid  " style="max-width: 200px;">';
+                    if ($avatar == 'null') {
+                        echo '<img src="../assets/images/user.png" alt="" class="img-fluid  d-lg-block d-none " style="max-width: 200px;">';
+                        echo "<img src='../assets/images/user.png'  class='img-fluid rounded-circle d-lg-none w-75' >";
                     } else {
                         echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-block d-none' style='max-width: 200px;'>";
                         echo "<img src='$avatar'  class='img-fluid rounded-circle d-lg-none w-75' >";
@@ -58,7 +59,7 @@ $avatar  = $_SESSION['logined']['avatar'];
             </div>
             <div class="col-12 col-lg-6">
                 <h1 class="mb-5">Thông tin tài khoản</h1>
-                <form action="/services/users/update.php" method="post" class="p-lg-5 p-4 shadow rounded-4">
+                <form action="/services/users/update.php" method="post" class="p-lg-5 p-4 shadow rounded-4" enctype='multipart/form-data'>
                     <?php
                     if (isset($_SESSION['update_user']) && $_SESSION['update_user'] == true) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
@@ -116,11 +117,12 @@ $avatar  = $_SESSION['logined']['avatar'];
                     <div class="mb-3">
                         <label for="inputAvatar" class="form-label">Avatar</label>
                         <div class="input-group mb-4">
-                            <input type="file" class="form-control" id="inputAvatar" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="avatar">
+                            <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
 
                         </div>
                     </div>
                     <input type='hidden' name='id' value='<?= $id ?>' />
+                    <input type='hidden' name='avatar' value='<?= $avatar ?>' />
 
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>

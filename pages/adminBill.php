@@ -77,13 +77,13 @@ if (isset($_SESSION['delete_shoe'])) {
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/pages/admin.php">Quản lý sản phẩm</a>
+                <a class="nav-link " href="/pages/admin.php">Quản lý sản phẩm</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/pages/adminUser.php">Quản lý người dùng</a>
+                <a class="nav-link " href="/pages/adminUser.php">Quản lý người dùng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/pages/adminBill.php">Quản lý hóa đơn</a>
+                <a class="nav-link active" aria-current="page" href="/pages/adminBill.php">Quản lý hóa đơn</a>
             </li>
         </ul>
         <main class="mt-5">

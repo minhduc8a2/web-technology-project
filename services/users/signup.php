@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $address = $_POST['address'];
         $password =  $_POST['password'];
 
-        $sqlCheck = "select * from users where phoneNumber='$phoneNumber' and email='$email'";
+        $sqlCheck = "select * from users where phoneNumber='$phoneNumber' or email='$email';";
         try {
             $result = $conn->query($sqlCheck);
             $row = $result->fetch_assoc();

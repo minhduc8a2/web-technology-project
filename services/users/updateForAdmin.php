@@ -9,12 +9,11 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 use Cloudinary\Api\Upload\UploadApi;
 
 session_start();
-if (!isset($_SESSION["logined"])) {
+if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["logined"]['role'] != "admin")) {
 
     header("location: /pages/login.php");
-    exit();
+    exit('Unauthenticated');
 }
-
 function validatePhoneNumber($phone)
 {
     if (preg_match('/^[0-9]*$/', $phone)) {
@@ -31,20 +30,15 @@ function validateEmail($email)
     }
     return true;
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
 
     $errorList = array();
-    $signupFormState = array();
     if (empty($_POST['name'])) {
         array_push($errorList, "Vui lòng nhập họ tên.");
-    } else {
-        $signupFormState['name'] = $_POST['name'];
     }
     if (empty($_POST['email'])) {
         array_push($errorList, "Vui lòng nhập email.");
     } else {
-
-        $signupFormState['email'] = $_POST['email'];
 
         if (!validateEmail($_POST['email'])) {
             array_push($errorList, "Vui lòng nhập đúng định dạng email.");
@@ -53,50 +47,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST['phoneNumber'])) {
         array_push($errorList, "Vui lòng nhập số điện thoại.");
     } else {
-
-        $signupFormState['phoneNumber'] = $_POST['phoneNumber'];
-
-
         if (!validatePhoneNumber(trim($_POST['phoneNumber']))) {
             array_push($errorList, "Vui lòng đúng định dạng số điện thoại.");
         }
     }
     if (empty($_POST['address'])) {
         array_push($errorList, "Vui lòng nhập địa chỉ.");
-    } else {
-        $signupFormState['address'] = $_POST['address'];
     }
     if (empty($_POST['password'])) {
         array_push($errorList, "Vui lòng nhập mật khẩu.");
     }
-    if (empty($_POST['newPassword']) && !empty($_POST['confirmPassword'])) {
-        array_push($errorList, "Vui lòng nhập mật khẩu mới.");
-    }
-    if (empty($_POST['confirmPassword']) && !empty($_POST['newPassword'])) {
-        array_push($errorList, "Vui lòng nhập lại mật khẩu mới.");
-    }
-    if (!empty($_POST['newPassword']) && !empty($_POST['confirmPassword']) && $_POST['confirmPassword'] != $_POST['newPassword']) {
-        array_push($errorList, "Mật khẩu mới không trùng khớp.");
-    }
 
-    //check authentication
-    if (count($errorList) == 0) {
-        $email = $_POST['email'];
-        $password =  $_POST['password'];
-        $sqlCheck = "select * from users where email='$email' and password='$password'";
-        try {
-            $result = $conn->query($sqlCheck);
-            $row = $result->fetch_assoc();
-            $userExist = (bool)$row;
-            if (!$userExist) {
 
-                array_push($errorList, "Mật khẩu hiện tại không đúng!");
-            }
-        } catch (\Throwable $th) {
-            array_push($errorList, "Hệ thống xảy ra lỗi!");
-            echo $th;
-        }
-    }
+
     // if authentic
     if (count($errorList) == 0) {
         $id = $_POST['id'];
@@ -104,13 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = trim($_POST['email']);
         $phoneNumber = trim($_POST['phoneNumber']);
         $address = trim($_POST['address']);
-        $avatar = $_POST['avatar'];
         $password =  trim($_POST['password']);
-        $newPassword =  trim($_POST['newPassword']);
+        $avatar = trim($_POST['avatar']);
 
         $sqlCheck = "select * from users where ( phoneNumber='$phoneNumber' and id!='$id' ) or ( email='$email' and id!='$id' );";
-
-        $phoneExists = false;
         try {
             $result = $conn->query($sqlCheck);
             $row = $result->fetch_assoc();
@@ -119,20 +79,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 array_push($errorList, "Số điện thoại hoặc email đã được đăng ký với tài khoản khác");
             }
         } catch (\Throwable $th) {
-            array_push($errorList, "Hệ thống xảy ra lỗi!");
             echo $th;
+            exit();
         }
-        $hasFile = false;
-
-        if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error']) &&  !$phoneExists) {
-            echo 'file in';
-            $hasFile = true;
+        if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error'])) {
             if ($avatar != 'null') {
                 $temp  = explode('/', $avatar);
                 $imageId = $temp[count($temp) - 2] . '/' . explode('.', $temp[count($temp) - 1])[0];
             }
             try {
                 if ($avatar != 'null') {
+                    echo 'hehe';
                     (new UploadApi())->destroy($imageId);
                 }
                 $file = $_FILES['imageFile'];
@@ -140,31 +97,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $respone = (new UploadApi())->upload($file['tmp_name']);
                 $avatar = $respone['secure_url'];
                 $avatarId = $respone['public_id'];
-                $uploadSuccess = true;
             } catch (\Throwable $th) {
                 echo $th;
-                $uploadSuccess = false;
+                exit();
             }
         }
 
-        if (!$phoneExists && (!$hasFile || ($hasFile && $uploadSuccess))) {
-
-            $sql = "UPDATE users SET name='$name', avatar='$avatar', email='$email', phoneNumber='$phoneNumber', address='$address' WHERE id='$id';";
-            if (!empty($newPassword)) $sql = "UPDATE users SET name='$name', email='$email', phoneNumber='$phoneNumber', address='$address', avatar='$avatar', password='$newPassword' WHERE id='$id';";
+        if (isset($phoneExists) && !$phoneExists) {
+            $sql = "UPDATE users SET name='$name', email='$email', phoneNumber='$phoneNumber', avatar='$avatar',  address='$address', password='$password' WHERE id='$id' ;";
 
             try {
 
                 if ($conn->query($sql) == TRUE) {
-                    echo 'success';
-                    $_SESSION['update_user'] = true;
-                    $_SESSION['logined'] = array('id' => $id, 'name' => $name, 'email' => $email, 'address' => $address, 'phoneNumber' => $phoneNumber, 'avatar' => $avatar, 'role' => $_SESSION['logined']['role']);
+
+                    $_SESSION['update_user'] = array('id' => $id, 'state' => true);
                 }
             } catch (\Throwable $th) {
-                if ($avatarId) {
-                    (new UploadApi())->destroy($avatarId);
-                }
-                array_push($errorList, "Hệ thống xảy ra lỗi!");
                 echo $th;
+                (new UploadApi())->destroy($avatarId);
+                exit();
             }
         }
     }
@@ -172,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['error_list'] = $errorList;
     }
 
-    header("location: /pages/user.php");
+    header("location: /pages/adminUser.php");
 } else {
     echo "Unauthenticated";
 }
