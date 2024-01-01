@@ -214,3 +214,34 @@ try {
 } catch (\Throwable $th) {
     echo $th;
 }
+
+
+try {
+    $sql = "DELIMITER $$
+
+    CREATE TRIGGER auto_update_quantity_shoes_on_update_bill_status
+    BEFORE UPDATE ON bills
+    FOR EACH ROW 
+    BEGIN
+        IF OLD.status != 'cancel' AND NEW.status = 'cancel' THEN
+            UPDATE shoes 
+            INNER JOIN billItems ON shoes.id = billItems.shoeId
+            SET shoes.instock = shoes.instock + billItems.quantity,  shoes.sold = shoes.sold - billItems.quantity
+            WHERE billItems.billId = OLD.id;
+        ELSEIF OLD.status = 'cancel' AND NEW.status != 'cancel' THEN
+            UPDATE shoes 
+            INNER JOIN billItems ON shoes.id = billItems.shoeId
+            SET shoes.instock = shoes.instock - billItems.quantity, shoes.sold = shoes.sold + billItems.quantity
+            WHERE billItems.billId = OLD.id;
+        END IF;
+    END$$
+    
+    DELIMITER ;";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<script>console.log('auto_update_quantity_shoes_on_update_bill_status  created successfully')</script>";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
