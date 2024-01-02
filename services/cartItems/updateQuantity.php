@@ -1,8 +1,9 @@
 <?php
-require_once dirname(__DIR__, 1) . '\connect_db.php';
+    session_start();
+
+require_once dirname(__DIR__, 1) . '/connect_db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_start();
     $input_quantity = $_POST["quantity"];
     $shoeId = $_POST["id"];
     $userId = $_SESSION['logined']['id'];;

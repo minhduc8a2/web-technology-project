@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 1) . '\services\connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/connect_db.php';
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -72,7 +72,7 @@ if (isset($_SESSION['change_status_bill'])) {
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
@@ -182,7 +182,7 @@ if (isset($_SESSION['change_status_bill'])) {
     </div>
 
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
 
     ?>
 

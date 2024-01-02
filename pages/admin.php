@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 1) . '\services\connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/connect_db.php';
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -37,7 +37,7 @@ if (isset($_SESSION['update_shoe'])) {
     unset($_SESSION['update_shoe']);
 }
 if (isset($_SESSION['create_shoe'])) {
-    if ($_SESSION['create_shoe']['state'] == true) {
+    if ($_SESSION['create_shoe'] == true) {
         echo '<script>alert("Tạo sản phẩm thành công!")</script>';
     } else {
 
@@ -72,7 +72,7 @@ if (isset($_SESSION['delete_shoe'])) {
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
@@ -244,7 +244,7 @@ if (isset($_SESSION['delete_shoe'])) {
     </div>
 
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
 
     ?>
 

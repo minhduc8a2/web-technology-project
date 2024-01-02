@@ -1,5 +1,6 @@
 <?php
-require dirname(__DIR__, 1) . '\services\connect_db.php';
+session_start();
+require dirname(__DIR__, 1) . '/services/connect_db.php';
 
 $shoesId = $_GET['id'];
 
@@ -24,7 +25,6 @@ if ($result->num_rows > 0) {
     $instock = $row['instock'];
     $hasData = true;
 }
-session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +40,7 @@ session_start();
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page">
         <div class="row gx-lg-5 gy-5">
@@ -105,7 +105,7 @@ session_start();
         </div>
     </div>
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
     $conn->close();
 
     ?>

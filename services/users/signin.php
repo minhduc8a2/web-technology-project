@@ -1,5 +1,7 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
+session_start();
+
+require dirname(__DIR__, 1) . '/connect_db.php';
 
 
 
@@ -13,7 +15,6 @@ function validateEmail($email)
     return true;
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_start();
     $errorList = array();
     $signinFormState = array();
 
@@ -50,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $_SESSION['logined'] = array('id' => $row['id'], 'name' => $row['name'], 'email' => $row['email'], 'address' => $row['address'], 'phoneNumber' => $row['phoneNumber'], 'avatar' => $row['avatar'], 'role' => $row['role']);
             }
+           
         } catch (\Throwable $th) {
             //throw $th;
         }

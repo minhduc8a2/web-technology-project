@@ -1,5 +1,7 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
+session_start();
+
+require dirname(__DIR__, 1) . '/connect_db.php';
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 use Cloudinary\Configuration\Configuration;
@@ -8,7 +10,6 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 
 use Cloudinary\Api\Upload\UploadApi;
 
-session_start();
 if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["logined"]['role'] != "admin")) {
 
     header("location: /pages/login.php");
@@ -84,19 +85,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create'])) {
         try {
             if ($conn->query($sql) === TRUE) {
 
-                $_SESSION['create_shoe'] = array('id' => $id, 'state' => true);
+                $_SESSION['create_shoe'] =  true;
             } else {
-                $_SESSION['create_shoe'] = array('id' => $id, 'state' => false);
+                $_SESSION['create_shoe'] = false;
             }
         } catch (\Throwable $th) {
             echo $th;
-            echo $sql;
+
             (new UploadApi())->destroy($imageId);
             exit();
         }
     }
     if (count($errorList) != 0) {
-        $_SESSION['error_list'] = array('id' => $_POST['id'], 'errorList' => $errorList);
+        $_SESSION['error_list'] = array('errorList' => $errorList);
     }
 
     header("location: /pages/admin.php");

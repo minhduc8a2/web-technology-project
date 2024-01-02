@@ -1,9 +1,5 @@
 <?php
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 ?>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-lg">
@@ -62,18 +58,13 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php
 
                 if (isset($_SESSION['logined'])) {
-                    echo '<form method="post" class="d-inline ms-4 text-black fs-5">
+                    echo '<form action="/services/users/logout.php" method="post" class="d-inline ms-4 text-black fs-5">
                     <input type="hidden" name="logOut" value="logOut" />
                     <button type="submit" class="border-0 bg-transparent"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
                 </form>';
                 }
                 ?>
-                <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["logOut"])) {
-                    $_SESSION['logined'] = null;
-                    header('location: /pages/login.php');
-                }
-                ?>
+
             </div>
 
         </div>

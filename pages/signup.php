@@ -19,7 +19,7 @@ session_start();
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page">
         <h1 class="my-5 text-center">Đăng ký tài khoản</h1>
@@ -120,7 +120,7 @@ session_start();
     </div>
 
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
 
     ?>
 

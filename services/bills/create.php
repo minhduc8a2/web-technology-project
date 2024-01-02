@@ -1,6 +1,7 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
 session_start();
+
+require dirname(__DIR__, 1) . '/connect_db.php';
 if (!isset($_SESSION["logined"])) {
 
     header("location: /pages/login.php");
@@ -13,11 +14,11 @@ if (isset($_SESSION['shoeList'])) {
     $total = $_SESSION['order_total']; //need unset
     $shoeList = $_SESSION['shoeList'];  //need unset
     $sql = "INSERT INTO bills (userId,userName,phoneNumber, address, total) VALUES ('$userId','$userName','$phoneNumber','$address',$total);";
-    echo "doing";
+
     try {
         if ($conn->query($sql) === TRUE) {
             $bill_id = $conn->insert_id;
-            echo $bill_id;
+
             $length = count($shoeList);
             for ($i = 0; $i < $length; $i++) {
                 $shoeId = $shoeList[$i]['id'];

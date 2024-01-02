@@ -1,7 +1,8 @@
 <?php
-require_once dirname(__DIR__, 1) . '\connect_db.php';
-
 session_start();
+
+require_once dirname(__DIR__, 1) . '/connect_db.php';
+
 
 if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["logined"]['role'] != "admin")) {
 

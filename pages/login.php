@@ -20,7 +20,7 @@ if (isset($_SESSION['logined'])) {
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page">
         <h1 class="my-5 text-center">Đăng nhập</h1>
@@ -74,7 +74,7 @@ if (isset($_SESSION['logined'])) {
     </div>
 
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
 
     ?>
 

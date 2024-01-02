@@ -1,5 +1,7 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
+session_start();
+dirname(__DIR__, 1);
+require dirname(__DIR__, 1) . '/connect_db.php';
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 use Cloudinary\Configuration\Configuration;
@@ -27,7 +29,6 @@ function validateEmail($email)
     return true;
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_start();
     $errorList = array();
     $signupFormState = array();
 

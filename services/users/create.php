@@ -1,5 +1,7 @@
 <?php
-require dirname(__DIR__, 1) . '\connect_db.php';
+session_start();
+
+require dirname(__DIR__, 1) . '/connect_db.php';
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 use Cloudinary\Configuration\Configuration;
@@ -8,7 +10,6 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 
 use Cloudinary\Api\Upload\UploadApi;
 
-session_start();
 if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["logined"]['role'] != "admin")) {
 
     header("location: /pages/login.php");
@@ -54,6 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
     if (empty($_POST['address'])) {
         array_push($errorList, "Vui lòng nhập địa chỉ.");
     }
+    if (empty($_POST['role'])) {
+        array_push($errorList, "Vui lòng nhập vai trò.");
+    } else if (trim($_POST['role']) != 'admin' && trim($_POST['role']) != 'normal') {
+        array_push($errorList, "Vui lòng nhập 1 trong hai giá trị 'admin' hoặc 'normal' trong mục vai trò.");
+    }
     if (empty($_POST['password'])) {
         array_push($errorList, "Vui lòng nhập mật khẩu.");
     }
@@ -68,6 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
         $phoneNumber = trim($_POST['phoneNumber']);
         $address = trim($_POST['address']);
         $password =  trim($_POST['password']);
+        $role = trim($_POST['role']);
+
 
         $sqlCheck = "select * from users where  phoneNumber='$phoneNumber'  or  email='$email';";
         try {
@@ -95,11 +103,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
         }
 
 
-        $sql = "INSERT INTO users (name,email,phoneNumber,address,password) 
-        VALUES ('$name','$email','$phoneNumber', '$address','$password');";
+        $sql = "INSERT INTO users (name,email,phoneNumber,address,password,role) 
+        VALUES ('$name','$email','$phoneNumber', '$address','$password','$role');";
         if (isset($avatar) && !empty($avatar)) {
-            $sql = "INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
-        VALUES ('$name','$email','$phoneNumber', '$address','$password','$avatar');";
+            $sql = "INSERT INTO users (name,email,phoneNumber,address,password,avatar,role) 
+        VALUES ('$name','$email','$phoneNumber', '$address','$password','$role','$avatar');";
         }
         try {
 

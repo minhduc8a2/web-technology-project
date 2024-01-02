@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 1) . '\services\connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/connect_db.php';
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -72,7 +72,7 @@ if (isset($_SESSION['delete_user'])) {
 
 <body>
     <?php
-    include dirname(__DIR__) . '\components\navbar.php';
+    include dirname(__DIR__) . '/components/navbar.php';
     ?>
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
@@ -131,6 +131,11 @@ if (isset($_SESSION['delete_user'])) {
 
                                 </div>
                                 <div class='mb-3'>
+                                    <label class='form-label'>Vai trò: 'admin' hoặc 'normal'</label>
+                                    <input type='text' class='form-control' name='role' value='normal'>
+
+                                </div>
+                                <div class='mb-3'>
                                     <label class='form-label'>Mật khẩu</label>
                                     <input type='password' class='form-control' name='password' value=''>
 
@@ -159,6 +164,7 @@ if (isset($_SESSION['delete_user'])) {
                     $email  = $user['email'];
                     $phoneNumber  = $user['phoneNumber'];
                     $address  = $user['address'];
+                    $role  = $user['role'];
                     $avatar  = $user['avatar'];
                     echo "
                 <div class='accordion-item'>
@@ -194,6 +200,11 @@ if (isset($_SESSION['delete_user'])) {
                         <div class='mb-3'>
                             <label  class='form-label'>Địa chỉ</label>
                             <input type='text' class='form-control'  name='address' value=' $address'>
+    
+                        </div>
+                        <div class='mb-3'>
+                            <label  class='form-label'>Vai trò: 'admin' hoặc 'normal'</label>
+                            <input type='text' class='form-control'  name='role' value=' $role'>
     
                         </div>
                         <div class='mb-3'>
@@ -241,7 +252,7 @@ if (isset($_SESSION['delete_user'])) {
     </div>
 
     <?php
-    include dirname(__DIR__) . "\components\\footer.php";
+    include dirname(__DIR__) . "/components/footer.php";
 
     ?>
 

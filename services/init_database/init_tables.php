@@ -1,5 +1,5 @@
 <?php
-require dirname(__DIR__, 1) . '/connect_db.php';
+require_once dirname(__DIR__, 1) . '/connect_db.php';
 
 //shoes table
 try {
@@ -13,7 +13,7 @@ try {
         instock INT UNSIGNED NOT NULL,
         sold INT UNSIGNED NOT NULL,
         imageurl  VARCHAR(500) NOT NULL,
-        imageid  VARCHAR(100) NOT NULL
+        
         );";
 
     if ($conn->query($sql) === TRUE) {

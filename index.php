@@ -1,4 +1,5 @@
 <?php
+session_start();
 include dirname(__FILE__) . '/services/connect_db.php';
 ?>
 
@@ -31,14 +32,14 @@ include dirname(__FILE__) . '/services/connect_db.php';
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1 fw-bold">HOLIDAY SALE</h5>
           <p class="mt-4" style="max-width: 500px; ">Ưu đãi lên đến 50%. Giá hiển thị trên trang web là giá bán cuối cùng. Một số sản phẩm ngoại lệ. Điều khoản và Điều kiện đi kèm.</p>
-          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=giày"><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
 
 
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">HOLIDAY SALE</h5>
           <p class="" style="max-width: 500px;">Ưu đãi lên đến 50%. Giá hiển thị trên trang web là giá bán cuối cùng. Một số sản phẩm ngoại lệ. Điều khoản và Điều kiện đi kèm.</p>
-          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=giày" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
 
       </div>
@@ -48,12 +49,12 @@ include dirname(__FILE__) . '/services/connect_db.php';
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">TỎA SÁNG CÙNG SAMBA</h5>
           <p class="" style="max-width: 500px;">Châu Bùi, 24K.RIGHT, Lil Thu, Nick Q Tran tỏa sáng cùng Samba. Bạn thì sao?</p>
-          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=samba"><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">TỎA SÁNG CÙNG SAMBA</h5>
           <p class="" style="max-width: 500px;">Châu Bùi, 24K.RIGHT, Lil Thu, Nick Q Tran tỏa sáng cùng Samba. Bạn thì sao?</p>
-          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=samba" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
       </div>
       <div class="carousel-item" data-bs-interval="4000">
@@ -62,12 +63,12 @@ include dirname(__FILE__) . '/services/connect_db.php';
         <div class="carousel-caption  d-none d-lg-block  text-start " style="padding-bottom: 10rem;">
           <h5 class="fs-1">ARSENAL X IAN WRIGHT</h5>
           <p class="" style="max-width: 500px;">Tôn vinh ký ức, khoảnh khắc và con người của Huyền thoại Arsenal trong suốt sự nghiệp của anh.</p>
-          <a href=""><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=ian+wright"><button class="styled-btn fw-bold mt-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
         <div class="carousel-caption  d-lg-none   ">
           <h5 class="fs-1">ARSENAL X IAN WRIGHT</h5>
           <p class="" style="max-width: 500px;">Tôn vinh ký ức, khoảnh khắc và con người của Huyền thoại Arsenal trong suốt sự nghiệp của anh.</p>
-          <a href="" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
+          <a href="/pages/search.php?search=ian+wright" class=""><button class="styled-btn fw-bold mt-4 mb-4">MUA NGAY <i class="fa-solid fa-arrow-right "></i></button></a>
         </div>
       </div>
     </div>
@@ -130,7 +131,7 @@ include dirname(__FILE__) . '/services/connect_db.php';
   </main>
 
   <?php
-  include "./components/footer.php";
+  include __DIR__ . "/components/footer.php";
 
   ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
