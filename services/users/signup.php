@@ -95,7 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //throw $th;
         }
         if (isset($phoneExists) && !$phoneExists) {
-            if (isset($_FILES['avatar'])) {
+            if (isset($_FILES['avatar']) && empty($_FILES['avatar']['error'])) {
+                echo $_FILES['imageFile']['error'];
                 $file = $_FILES['avatar'];
                 $respone = (new UploadApi())->upload($file['tmp_name']);
                 $avatar = $respone['secure_url'];
