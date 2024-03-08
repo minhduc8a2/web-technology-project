@@ -4,10 +4,12 @@ require dirname(__DIR__, 1) . '/services/connect_db.php';
 
 $shoesId = $_GET['id'];
 
-$sql = "SELECT shoes.name as name, price,instock, imageurl,description,  category FROM shoes
-where shoes.id='$shoesId'
-;";
-$result = $conn->query($sql);
+$sql = $conn->prepare("SELECT shoes.name as name, price,instock, imageurl,description,  category FROM shoes
+where shoes.id=?
+;");
+$sql->bind_param('i', $shoesId);
+$sql->execute();
+$result = $sql->get_result();
 function moneyFormat($x)
 {
 

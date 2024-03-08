@@ -14,10 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
 
     $billId = $_POST["id"];
 
-    $sql = "delete from bills WHERE id=$billId;";
+    $sql = $conn->prepare("delete from bills WHERE id=?;");
+    $sql->bind_param('i',$billId);
+    
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["delete_bill"] = true;
         } else {
             $_SESSION["delete_bill"] = false;

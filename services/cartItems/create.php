@@ -10,9 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
     $userId = $_SESSION['logined']['id'];;
     $shoeId = $_POST["id"];
 
-    $sql = "INSERT INTO cartItems (userId,shoeId) VALUES ('$userId','$shoeId');";
+    $sql = $conn->prepare("INSERT INTO cartItems (userId,shoeId) VALUES (?,?);");
+    $sql->bind_param('ii', $userId, $shoeId);
     try {
-        $conn->query($sql);
+        $sql->execute();
     } catch (\Throwable $th) {
         //throw $th;
     }

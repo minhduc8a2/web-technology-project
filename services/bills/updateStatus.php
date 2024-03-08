@@ -15,10 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
     $billId = $_POST["id"];
     $status = $_POST["status"];
 
-    $sql = "UPDATE bills SET status = '$status' WHERE id='$billId';";
+    $sql = $conn->prepare("UPDATE bills SET status = ? WHERE id=?;");
+    $sql->bind_param('si',$status,$billId);
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["change_status_bill"] = true;
         } else {
             $_SESSION["change_status_bill"] = false;

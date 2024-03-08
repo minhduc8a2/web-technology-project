@@ -103,13 +103,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
 
-            $sql = "INSERT INTO users (name,email,phoneNumber,address,password) 
-            VALUES ('$name','$email','$phoneNumber', '$address','$password');";
+            $sql = $conn->prepare("INSERT INTO users (name,email,phoneNumber,address,password) 
+            VALUES (?,?,?,?,?);");
+            $sql->bind_param('sssss', $name, $email, $phoneNumber, $address, $password);
             if (isset($avatar) && !empty($avatar)) {
-                $sql = "INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
-            VALUES ('$name','$email','$phoneNumber', '$address','$password','$avatar');";
+                $sql = $conn->prepare("INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
+            VALUES (?,?,?,?,?,?);");
+                $sql->bind_param('ssssss', $name, $email, $phoneNumber, $address, $password, $avatar);
             }
-            if ($conn->query($sql) === TRUE) {
+            if ($sql->execute() === TRUE) {
 
                 $_SESSION['sign_up'] = true;
             } else {

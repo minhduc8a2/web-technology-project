@@ -103,16 +103,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
         }
 
 
-        $sql = "INSERT INTO users (name,email,phoneNumber,address,password,role) 
-        VALUES ('$name','$email','$phoneNumber', '$address','$password','$role');";
+        $sql = $conn->prepare("INSERT INTO users (name,email,phoneNumber,address,password,role) 
+        VALUES (?,?,?,?,?,?);");
+        $sql->bind_param('ssssss', $name, $email, $phoneNumber, $address, $password, $role);
         if (isset($avatar) && !empty($avatar)) {
-            $sql = "INSERT INTO users (name,email,phoneNumber,address,password,avatar,role) 
-        VALUES ('$name','$email','$phoneNumber', '$address','$password','$role','$avatar');";
+            $sql = $conn->prepare("INSERT INTO users (name,email,phoneNumber,address,password,avatar,role) 
+        VALUES (?,?,?,?,?,?,?);");
+            $sql->bind_param('ssssss', $name, $email, $phoneNumber, $address, $password, $avatar, $role);
         }
         try {
 
 
-            if ($conn->query($sql) == TRUE) {
+            if ($sql->execute() == TRUE) {
 
                 $_SESSION['create_user'] = true;
             }

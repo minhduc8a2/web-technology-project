@@ -13,10 +13,10 @@ if (isset($_SESSION['shoeList'])) {
     $address = $_SESSION['logined']['address'];
     $total = $_SESSION['order_total']; //need unset
     $shoeList = $_SESSION['shoeList'];  //need unset
-    $sql = "INSERT INTO bills (userId,userName,phoneNumber, address, total) VALUES ('$userId','$userName','$phoneNumber','$address',$total);";
-
+    $sql = $conn->prepare("INSERT INTO bills (userId,userName,phoneNumber, address, total) VALUES (?,?,?,?,?);");
+    $sql->bind_param('isssi', $userId, $userName, $phoneNumber, $address, $total);
     try {
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $bill_id = $conn->insert_id;
 
             $length = count($shoeList);
@@ -24,8 +24,9 @@ if (isset($_SESSION['shoeList'])) {
                 $shoeId = $shoeList[$i]['id'];
                 $price = $shoeList[$i]['price'];
                 $quantity = $shoeList[$i]['quantity'];
-                $sql = "INSERT INTO billItems (billId,shoeId,price, quantity) VALUES ('$bill_id','$shoeId','$price','$quantity');";
-                if ($conn->query($sql) !== TRUE) {
+                $sql = $conn->prepare("INSERT INTO billItems (billId,shoeId,price, quantity) VALUES (?,?,?,?);");
+                $sql->bind_param('isii', $bill_id, $shoeId, $price, $quantity);
+                if ($sql->execute() !== TRUE) {
                     $_SESSION['create_bill'] = FALSE;
                 }
             }

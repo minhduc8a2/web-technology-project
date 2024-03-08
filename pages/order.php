@@ -13,14 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     $userId = $_SESSION['logined']['id'];
 
 
-    $sql = "select shoes.name as name,shoes.id as id, price, imageurl, quantity from shoes, cartItems where shoes.id=shoeId and userId='$userId' and (shoes.id = " . $shoeListId[0];
+    $sql = "select shoes.name as name,shoes.id as id, price, imageurl, quantity from shoes, cartItems where shoes.id=shoeId and userId=? and (shoes.id = " . '?';
+    $template = 'ii';
     for ($i = 1; $i < count($shoeListId); $i++) {
-        $sql = $sql . " OR shoes.id = " . $shoeListId[$i];
+        $sql = $sql . " OR shoes.id = " . '?';
+        $template = $template . 'i';
     }
     $sql = $sql . ");";
 
+    $sql = $conn->prepare($sql);
+    $sql->bind_param($template, ...$shoeListId);
+    $sql->execute();
     try {
-        $result = $conn->query($sql);
+        $result = $sql->get_result();
         if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {

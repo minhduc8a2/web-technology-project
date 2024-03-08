@@ -47,10 +47,12 @@ if (isset($_SESSION["delete_shoe"])) {
                     $total = 0;
                     $userId = $_SESSION['logined']['id'];
 
-                    $sql = "SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity  FROM shoes, cartItems
-                    where shoes.id=shoeId and userId='$userId'
-                    ;";
-                    $result = $conn->query($sql);
+                    $sql = $conn->prepare("SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity  FROM shoes, cartItems
+                    where shoes.id=shoeId and userId=?
+                    ;");
+                    $sql->bind_param('i',$userId);
+                    $sql->execute();
+                    $result = $sql->get_result();
                     function moneyFormat($x)
                     {
                         return str_replace(',', '.', strval(number_format($x)));

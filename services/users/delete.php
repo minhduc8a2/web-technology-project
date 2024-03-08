@@ -31,10 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
         }
     }
 
-    $sql = "delete from users WHERE id=$userId ;";
+    $sql = $conn->prepare("delete from users WHERE id=? ;");
+    $sql->bind_param('i', $userId);
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["delete_user"] = true;
         } else {
             $_SESSION["delete_user"] = false;

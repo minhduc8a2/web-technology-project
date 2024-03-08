@@ -35,8 +35,10 @@ if (isset($_GET['search'])) {
                 <?php
 
                 if (isset($searchTerm)) {
-                    $sql = "SELECT id,name, price, imageurl FROM shoes where  name LIKE '%$searchTerm%'";
-                    $result = $conn->query($sql);
+                    $sql = $conn->prepare("SELECT id,name, price, imageurl FROM shoes where  name LIKE '%?%'");
+                    $sql->bind_param('s', $searchTerm);
+                    $sql->execute();
+                    $result = $sql->get_result();
                     function moneyFormat($x)
                     {
 

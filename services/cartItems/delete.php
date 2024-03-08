@@ -10,10 +10,11 @@ if (!isset($_SESSION["logined"])) {
     $shoeId = $_POST["id"];
     $userId = $_SESSION['logined']['id'];
 
-    $sql = "delete from cartItems WHERE shoeId=$shoeId and userId=$userId";
+    $sql = $conn->prepare("delete from cartItems WHERE shoeId=? and userId=?");
+    $sql->bind_param('ii', $shoeId, $userId);
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["delete_shoe"] = true;
         } else {
             $_SESSION["delete_shoe"] = false;

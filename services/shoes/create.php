@@ -80,10 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create'])) {
 
 
 
-        $sql = "INSERT INTO shoes (name, description,category, price,sold, instock,imageurl)
-        VALUES ('$name','$description','$category','$price','$sold','$instock','$imageurl') ;";
+        $sql = $conn->prepare("INSERT INTO shoes (name, description,category, price,sold, instock,imageurl)
+        VALUES (?,?,?,?,?,?,?) ;");
+        $sql->bind_param('sssiiis', $name, $description, $category, $price, $sold, $instock, $imageurl);
         try {
-            if ($conn->query($sql) === TRUE) {
+            if ($sql->execute() === TRUE) {
 
                 $_SESSION['create_shoe'] =  true;
             } else {

@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hasFile = false;
 
         if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error']) &&  !$phoneExists) {
-            
+
             $hasFile = true;
             if ($avatar != 'null') {
                 $temp  = explode('/', $avatar);
@@ -150,13 +150,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!$phoneExists && (!$hasFile || ($hasFile && $uploadSuccess))) {
 
-            $sql = "UPDATE users SET name='$name', avatar='$avatar', email='$email', phoneNumber='$phoneNumber', address='$address' WHERE id='$id';";
-            if (!empty($newPassword)) $sql = "UPDATE users SET name='$name', email='$email', phoneNumber='$phoneNumber', address='$address', avatar='$avatar', password='$newPassword' WHERE id='$id';";
+            $sql = $conn->prepare("UPDATE users SET name=?, avatar=?, email=?, phoneNumber=?, address=? WHERE id=?;");
+            $sql->bind_param('ssssss', $name,  $avatar, $email, $phone, $address, $id);
+            if (!empty($newPassword)) {
+                $sql = $conn->prepare("UPDATE users SET name=?, avatar=?, email=?, phoneNumber=?,password=?, address=? WHERE id=?;");
+                $sql->bind_param('sssssss', $name,  $avatar, $email, $phone, $newPassword, $address, $id);
+            }
 
             try {
 
-                if ($conn->query($sql) == TRUE) {
-                   
+                if ($sql->execute() == TRUE) {
+
                     $_SESSION['update_user'] = true;
 
                     $_SESSION['logined'] = array('id' => $id, 'name' => $name, 'email' => $email, 'address' => $address, 'phoneNumber' => $phoneNumber, 'avatar' => $avatar, 'role' => $_SESSION['logined']['role']);

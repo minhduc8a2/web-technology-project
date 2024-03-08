@@ -28,10 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
         echo $th;
         exit();
     }
-    $sql = "delete from shoes WHERE id=$shoeId ;";
+    $sql = $conn->prepare("delete from shoes WHERE id=? ;");
+    $sql->bind_param('i', $shoeId);
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["delete_shoe"] = true;
         } else {
             $_SESSION["delete_shoe"] = false;

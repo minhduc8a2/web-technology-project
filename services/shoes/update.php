@@ -76,9 +76,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
         }
 
 
-        $sql = "UPDATE shoes SET name='$name', description='$description',  price='$price', category='$category', instock = '$instock', sold = '$sold', imageurl = '$imageurl' WHERE id='$id';";
+        $sql = $conn->prepare("UPDATE shoes SET name=?, description=?,  price=?, category=?, instock = ?, sold = ?, imageurl = ? WHERE id=?;");
+        $sql->bind_param('ssisiisi', $name, $description, $price, $category, $instock, $sold, $imageurl, $id);
         try {
-            if ($conn->query($sql) === TRUE && $uploadOK) {
+            if ($sql->execute() === TRUE && $uploadOK) {
 
                 $_SESSION['update_shoe'] = array('id' => $id, 'state' => true);
             } else {

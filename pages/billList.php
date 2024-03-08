@@ -8,10 +8,12 @@ if (!isset($_SESSION['logined'])) {
 
 $userId = $_SESSION['logined']['id'];
 //get billlist
-$sql = "select* from bills where userId=$userId;";
+$sql = $conn->prepare("select* from bills where userId=?;");
+$sql->bind_param('i', $userId);
+$sql->execute();
 $billList = [];
 try {
-    $result = $conn->query($sql);
+    $result = $sql->get_result();
     if ($result->num_rows > 0) {
         // output data of each row
         while ($row = $result->fetch_assoc()) {

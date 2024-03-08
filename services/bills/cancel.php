@@ -12,13 +12,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST
     $userId = $_SESSION['logined']['id'];
     $role = $_SESSION['logined']['role'];
 
-    $sql = "UPDATE bills SET status = 'cancel' WHERE id='$billId' and userId='$userId' ;";
+    $sql = $conn->prepare("UPDATE bills SET status = 'cancel' WHERE id=? and userId=? ;");
+    $sql->bind_param('ii', $billId, $userId);
     if ($role == 'admin') {
-        $sql = "UPDATE bills SET status = 'cancel' WHERE id='$billId' ;";
+        $sql = $conn->prepare("UPDATE bills SET status = 'cancel' WHERE id=? ;");
+        $sql->bind_param('i', $billId);
+    } else {
     }
     try {
 
-        if ($conn->query($sql) === TRUE) {
+        if ($sql->execute() === TRUE) {
             $_SESSION["cancel_bill"] = true;
         } else {
             $_SESSION["cancel_bill"] = false;

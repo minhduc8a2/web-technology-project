@@ -111,10 +111,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
         }
 
         if (isset($phoneExists) && !$phoneExists) {
-            $sql = "UPDATE users SET name='$name',role='$role', email='$email', phoneNumber='$phoneNumber', avatar='$avatar',  address='$address', password='$password' WHERE id='$id' ;";
+            $sql = $conn->prepare("UPDATE users SET name='$name',role='$role', email='$email', phoneNumber='$phoneNumber', avatar='$avatar',  address='$address', password='$password' WHERE id='$id' ;");
+            $sql->bind_param('ssssssss', $name, $role, $email, $phoneNumber, $avatar, $address, $password, $id);
             try {
 
-                if ($conn->query($sql) == TRUE) {
+                if ($sql->execute() == TRUE) {
 
                     $_SESSION['update_user'] = array('id' => $id, 'state' => true);
                 }

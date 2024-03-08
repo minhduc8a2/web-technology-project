@@ -9,9 +9,12 @@ if (isset($_GET['categoryId'])) {
     exit();
 }
 
-$sql = "select name from categories where id='$categoryId';";
+$sql = $conn->prepare("select name from categories where id=?;");
+$sql->bind_param('i', $categoryId);
+$sql->execute();
+
 try {
-    $result = $conn->query($sql);
+    $result = $sql->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $categoryName = $row['name'];
@@ -20,7 +23,7 @@ try {
         exit();
     }
 } catch (\Throwable $th) {
-    echo "Error with server.";
+    echo $th;
     exit();
 }
 
@@ -52,8 +55,10 @@ try {
 
 
 
-                $sql = "SELECT id,name, price, imageurl FROM shoes where category = '$categoryName'";
-                $result = $conn->query($sql);
+                $sql = $conn->prepare("SELECT id,name, price, imageurl FROM shoes where category = ?");
+                $sql->bind_param('s', $categoryName);
+                $sql->execute();
+                $result = $sql->get_result();
                 function moneyFormat($x)
                 {
 

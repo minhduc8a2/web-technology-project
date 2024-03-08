@@ -14,18 +14,25 @@ $role = $_SESSION['logined']['role'];
 
 
 //get bill
-$sql = "select* from bills where id=$billId and userId='$userId';";
+$sql = $conn->prepare("select* from bills where id=? and userId=?;");
+$sql->bind_param('ii', $billId, $userId);
 if ($role == 'admin') {
-    $sql = "select* from bills where id=$billId ;";
+    $sql = $conn->prepare("select* from bills where id=? ;");
+    $sql->bind_param('i', $billId);
 }
 try {
-    $result = $conn->query($sql);
+    $sql->execute();
+    $result = $sql->get_result();
+
     if ($result->num_rows > 0) {
         // output data of each row
         $bill = $result->fetch_assoc();
         //get bill items
-        $sql = "select name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = $billId and billItems.shoeId = shoes.id ;";
-        $result = $conn->query($sql);
+        $sql = $conn->prepare("select name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = ? and billItems.shoeId = shoes.id ;");
+        $sql->bind_param('i', $billId);
+        $sql->execute();
+        $result = $sql->get_result();
+
         $shoeList = [];
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -37,7 +44,7 @@ try {
         exit();
     }
 } catch (\Throwable $th) {
-    echo 'Error with server.';
+    echo $th;
     exit();
 }
 ?>
