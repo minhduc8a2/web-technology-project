@@ -2,6 +2,8 @@
 session_start();
 
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
+
 if (isset($_GET['search'])) {
     $searchTerm = $_GET['search'];
 }
@@ -40,11 +42,7 @@ if (isset($_GET['search'])) {
                     $sql->bind_param('s', $searchTemplate);
                     $sql->execute();
                     $result = $sql->get_result();
-                    function moneyFormat($x)
-                    {
 
-                        return str_replace(',', '.', strval(number_format($x)));
-                    }
                     if ($result->num_rows > 0) {
                         // output data of each row
                         while ($row = $result->fetch_assoc()) {

@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
+
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -93,10 +95,7 @@ if (!isset($_SESSION['shoeList']) && !isset($_SESSION['create_bill'])) {
                 <ul class="mt-5 p-0 ">
                     <?php
                     $total = 0;
-                    function moneyFormat($x)
-                    {
-                        return str_replace(',', '.', strval(number_format($x)));
-                    }
+                    
                     $shoeList = $_SESSION['shoeList'];
                     foreach ($shoeList as &$row) {
                         $shoeName = $row['name'];

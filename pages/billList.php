@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
+
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -50,10 +52,7 @@ try {
         <ul class="mt-5 p-0 ">
             <?php
 
-            function moneyFormat($x)
-            {
-                return str_replace(',', '.', strval(number_format($x)));
-            }
+           
 
             foreach ($billList as &$row) {
                 $id = $row['id'];

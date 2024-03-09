@@ -1,5 +1,8 @@
 <?php
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/shoes/utils.php';
+require_once dirname(__DIR__, 1) . '/services/Paginator.php';
+
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -14,9 +17,14 @@ if (isset($_SESSION['logined']) && $_SESSION['logined']['role'] != 'admin') {
 }
 
 $shoeList = [];
-$sql = "select* from shoes ;";
+$limit = $_GET['limit'] ?? 12;
+$page = $_GET['page'] ?? 1;
+$offset = $page ? ($page - 1) * $limit : 0;
+$totalShoes = getShoesCount();
+$paginator = new Paginator($limit, $totalShoes, $page);
+$pages = $paginator->getPages(length: 3);
 try {
-    $result = $conn->query($sql);
+    $result = getShoesResult($limit, $offset);
     if ($result->num_rows > 0) {
         // output data of each row
         while ($row = $result->fetch_assoc()) {
@@ -178,7 +186,7 @@ if (isset($_SESSION['delete_shoe'])) {
                             <form action='/services/shoes/delete.php' method='post' class='m-0 d-flex align-items-center shadow-sm p-4 rounded-4'>
                                 <input type='hidden' name='id' value='$id'/>
                                 <input type='hidden' name='imageurl' value='$imageurl'/>
-                                <button class='border-0 bg-transparent text-danger fs-5' type='submit'>Xóa sản phẩm <i class='fa-solid fa-trash-can'></i></button>
+                                <button class='border-0 bg-transparent text-danger fs-5' type='submit' id='del-btn'>Xóa sản phẩm <i class='fa-solid fa-trash-can'></i></button>
                             </form> 
                             <form action='/services/shoes/update.php' method='post' class='p-lg-5 p-2 shadow rounded-4 mt-4' enctype='multipart/form-data'>
                                 <div class='mb-3'>
@@ -239,7 +247,27 @@ if (isset($_SESSION['delete_shoe'])) {
                 ?>
 
             </div>
-
+            <div class=" mt-5 d-flex justify-content-center align-items-center">
+                <ul class=" pagination ">
+                    <li class="page-item<?= $paginator->getPrevPage() ?
+                                            '' : ' disabled' ?>">
+                        <a role="button" href="/pages/admin.php?page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
+                            <span>&laquo;</span>
+                        </a>
+                    </li>
+                    <?php foreach ($pages as $page) : ?>
+                        <li class="page-item<?= $paginator->currentPage === $page ?
+                                                ' active' : '' ?>"><a role="button" href="/pages/admin.php?page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
+                        </li>
+                    <?php endforeach ?>
+                    <li class="page-item<?= $paginator->getNextPage() ?
+                                            '' : ' disabled' ?>">
+                        <a role="button" href="/pages/admin.php?page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
+                            <span>&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </main>
     </div>
 
@@ -250,6 +278,17 @@ if (isset($_SESSION['delete_shoe'])) {
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const delBtn = $('#del-btn');
+        delBtn.on('click', function(e) {
+            e.preventDefault();
+            if (confirm('Bạn có chắc là muốn xóa sản phẩm này?')) {
+                delBtn.parent().submit();
+
+            }
+        })
+    </script>
 </body>
 
 </html>

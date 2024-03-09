@@ -1,6 +1,7 @@
 <?php
 session_start();
 require dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
 
 $shoesId = $_GET['id'];
 
@@ -10,12 +11,7 @@ where shoes.id=?
 $sql->bind_param('i', $shoesId);
 $sql->execute();
 $result = $sql->get_result();
-function moneyFormat($x)
-{
 
-
-    return str_replace(',', '.', strval(number_format($x)));
-}
 $hasData = false;
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();

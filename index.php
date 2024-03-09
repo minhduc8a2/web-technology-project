@@ -1,6 +1,8 @@
 <?php
 session_start();
 include dirname(__FILE__) . '/services/connect_db.php';
+require_once dirname(__FILE__) . '/services/utils.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -90,13 +92,9 @@ include dirname(__FILE__) . '/services/connect_db.php';
 
 
 
-        $sql = "SELECT id,name, price, imageurl FROM shoes limit 10";
+        $sql = "SELECT id,name, price, imageurl FROM shoes order by sold desc limit 10 ";
         $result = $conn->query($sql);
-        function moneyFormat($x)
-        {
 
-          return str_replace(',', '.', strval(number_format($x)));
-        }
         if ($result->num_rows > 0) {
           // output data of each row
           while ($row = $result->fetch_assoc()) {

@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
+
 session_start();
 if (!isset($_SESSION['logined'])) {
 
@@ -53,10 +55,7 @@ if (isset($_SESSION["delete_shoe"])) {
                     $sql->bind_param('i', $userId);
                     $sql->execute();
                     $result = $sql->get_result();
-                    function moneyFormat($x)
-                    {
-                        return str_replace(',', '.', strval(number_format($x)));
-                    }
+                    
 
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {

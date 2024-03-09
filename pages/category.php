@@ -2,6 +2,9 @@
 session_start();
 
 require_once dirname(__DIR__, 1) . '/services/connect_db.php';
+require_once dirname(__DIR__, 1) . '/services/Paginator.php';
+require_once dirname(__DIR__, 1) . '/services/shoes/utils.php';
+require_once dirname(__DIR__, 1) . '/services/utils.php';
 if (isset($_GET['categoryId'])) {
     $categoryId = $_GET['categoryId'];
 } else {
@@ -26,6 +29,13 @@ try {
     echo $th;
     exit();
 }
+
+$limit = $_GET['limit'] ?? 12;
+$page = $_GET['page'] ?? 1;
+$offset = $page ? ($page - 1) * $limit : 0;
+$totalShoes = getShoesCountByCategory($categoryName);
+$paginator = new Paginator($limit, $totalShoes, $page);
+$pages = $paginator->getPages(length: 3);
 
 
 ?>
@@ -52,18 +62,7 @@ try {
             <div class="row gy-4">
 
                 <?php
-
-
-
-                $sql = $conn->prepare("SELECT id,name, price, imageurl FROM shoes where category = ?");
-                $sql->bind_param('s', $categoryName);
-                $sql->execute();
-                $result = $sql->get_result();
-                function moneyFormat($x)
-                {
-
-                    return str_replace(',', '.', strval(number_format($x)));
-                }
+                $result = getShoesResultByCategory($categoryName, $limit, $offset);
                 if ($result->num_rows > 0) {
                     // output data of each row
                     while ($row = $result->fetch_assoc()) {
@@ -95,6 +94,29 @@ try {
                 ?>
             </div>
         </div>
+
+        <div class=" mt-5 d-flex justify-content-center align-items-center">
+            <ul class=" pagination ">
+                <li class="page-item<?= $paginator->getPrevPage() ?
+                                        '' : ' disabled' ?>">
+                    <a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
+                        <span>&laquo;</span>
+                    </a>
+                </li>
+                <?php foreach ($pages as $page) : ?>
+                    <li class="page-item<?= $paginator->currentPage === $page ?
+                                            ' active' : '' ?>"><a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
+                    </li>
+                <?php endforeach ?>
+                <li class="page-item<?= $paginator->getNextPage() ?
+                                        '' : ' disabled' ?>">
+                    <a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
+                        <span>&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
     </main>
     <?php
     include dirname(__DIR__) . "/components/footer.php";
