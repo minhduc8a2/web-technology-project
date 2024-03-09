@@ -151,10 +151,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!$phoneExists && (!$hasFile || ($hasFile && $uploadSuccess))) {
 
             $sql = $conn->prepare("UPDATE users SET name=?, avatar=?, email=?, phoneNumber=?, address=? WHERE id=?;");
-            $sql->bind_param('ssssss', $name,  $avatar, $email, $phone, $address, $id);
+            $sql->bind_param('sssssi', $name,  $avatar, $email, $phone, $address, $id);
             if (!empty($newPassword)) {
                 $sql = $conn->prepare("UPDATE users SET name=?, avatar=?, email=?, phoneNumber=?,password=?, address=? WHERE id=?;");
-                $sql->bind_param('sssssss', $name,  $avatar, $email, $phone, $newPassword, $address, $id);
+                $sql->bind_param('ssssssi', $name,  $avatar, $email, $phone, $newPassword, $address, $id);
             }
 
             try {

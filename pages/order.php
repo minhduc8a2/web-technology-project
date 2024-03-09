@@ -6,12 +6,10 @@ if (!isset($_SESSION['logined'])) {
     header('location: /pages/login.php');
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     $shoeListId = $_POST['shoeList'];
     $shoeList = [];
     $userId = $_SESSION['logined']['id'];
-
 
     $sql = "select shoes.name as name,shoes.id as id, price, imageurl, quantity from shoes, cartItems where shoes.id=shoeId and userId=? and (shoes.id = " . '?';
     $template = 'ii';
@@ -22,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     $sql = $sql . ");";
 
     $sql = $conn->prepare($sql);
-    $sql->bind_param($template, ...$shoeListId);
+    $sql->bind_param($template, $userId, ...$shoeListId);
     $sql->execute();
     try {
         $result = $sql->get_result();
@@ -37,9 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
     }
 
     $_SESSION['shoeList'] = $shoeList;
+
     exit();
 }
-
 
 if (!isset($_SESSION['shoeList']) && !isset($_SESSION['create_bill'])) {
     header("location: /pages/cart.php");

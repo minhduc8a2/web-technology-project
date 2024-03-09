@@ -165,6 +165,7 @@ if (isset($_SESSION['delete_user'])) {
                     $phoneNumber  = $user['phoneNumber'];
                     $address  = $user['address'];
                     $role  = $user['role'];
+                    $password = $user['password'];
                     $avatar  = $user['avatar'];
                     echo "
                 <div class='accordion-item'>

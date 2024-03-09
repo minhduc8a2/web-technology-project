@@ -77,9 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
         $password =  trim($_POST['password']);
         $avatar = trim($_POST['avatar']);
 
-        $sqlCheck = "select * from users where ( phoneNumber='$phoneNumber' and id!='$id' ) or ( email='$email' and id!='$id' );";
+        $sqlCheck = $conn->prepare("select * from users where ( phoneNumber=? and id!=? ) or ( email=? and id!=? );");
+
+        $sqlCheck->bind_param('sisi', $phoneNumber, $id, $email, $id);
+        $sqlCheck->execute();
         try {
-            $result = $conn->query($sqlCheck);
+            $result = $sqlCheck->get_result();
             $row = $result->fetch_assoc();
             $phoneExists = (bool)$row;
             if ($phoneExists) {
@@ -111,8 +114,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
         }
 
         if (isset($phoneExists) && !$phoneExists) {
-            $sql = $conn->prepare("UPDATE users SET name='$name',role='$role', email='$email', phoneNumber='$phoneNumber', avatar='$avatar',  address='$address', password='$password' WHERE id='$id' ;");
-            $sql->bind_param('ssssssss', $name, $role, $email, $phoneNumber, $avatar, $address, $password, $id);
+            $sql = $conn->prepare("UPDATE users SET name=?,role=?, email=?, phoneNumber=?, avatar=?,  address=?, password=? WHERE id=? ;");
+            $sql->bind_param('sssssssi', $name, $role, $email, $phoneNumber, $avatar, $address, $password, $id);
             try {
 
                 if ($sql->execute() == TRUE) {

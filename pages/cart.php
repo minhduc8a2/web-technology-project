@@ -50,7 +50,7 @@ if (isset($_SESSION["delete_shoe"])) {
                     $sql = $conn->prepare("SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity  FROM shoes, cartItems
                     where shoes.id=shoeId and userId=?
                     ;");
-                    $sql->bind_param('i',$userId);
+                    $sql->bind_param('i', $userId);
                     $sql->execute();
                     $result = $sql->get_result();
                     function moneyFormat($x)
