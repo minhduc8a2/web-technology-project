@@ -1,7 +1,3 @@
-<?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-?>
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-lg">
     <div class="container-fluid px-5">
         <a class="navbar-brand" href="/index.php"><img src="../assets/images/logo.png" alt="logo" class="logo"></a>
@@ -20,14 +16,13 @@ require_once dirname(__DIR__, 1) . '/services/connect_db.php';
                     </a>
                     <ul class="dropdown-menu">
                         <?php
-                        $sql = "SELECT name, id FROM categories";
-                        $result = $conn->query($sql);
 
-                        if ($result->num_rows > 0) {
+                        $length = count($categoryList);
+                        if ($categoryList > 0) {
                             // output data of each row
-                            while ($row = $result->fetch_assoc()) {
-                                $name = $row['name'];
-                                $id = $row['id'];
+                            for ($i = 0; $i < $length; $i++) {;
+                                $name = $categoryList[$i]->name;
+                                $id = $categoryList[$i]->id;
                                 echo "<li><a class='dropdown-item' href='/pages/category.php?categoryId=$id'>$name</a></li>";
                             }
                         }
