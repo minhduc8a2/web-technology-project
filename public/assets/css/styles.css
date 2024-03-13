@@ -1,5 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap");
 
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+footer,
+nav {
+  flex-shrink: 0;
+}
+main {
+  flex-grow: 1;
+}
+
 .logo {
   width: 80px;
 }

@@ -22,7 +22,7 @@ class DatabaseConnector
             exit();
         }
     }
-    public function getQueryExecuted($query, $params = [])
+    public function queryExecuted($query, $params = [])
     {
         $sql = $this->conn->prepare($query);
         $paramsLength = count($params);
@@ -39,7 +39,7 @@ class DatabaseConnector
         return $sql;
     }
 
-    public function getQueryNotExecuted($query, $params = [])
+    public function queryNotExecuted($query, $params = [])
     {
         $sql = $this->conn->prepare($query);
         $paramsLength = count($params);
@@ -49,11 +49,15 @@ class DatabaseConnector
         return $sql;
     }
 
-    public  function getAll(string $table, int|bool $limit = false, int|bool $offset = false, bool|string $orderBy = false, string $isAsc = 'asc')
+    public  function getQuery(string $select,  string|bool $where = false, array $whereParams = [], int|bool $limit = false, int|bool $offset = false, bool|string $orderBy = false, string $isAsc = 'asc')
     {
         $params = [];
-        $query = "SELECT * FROM " . $table;
+        $query = $select;
+        if ($where) {
 
+            $query = $query . ' ' . $where;
+            $params = array_merge($params, $whereParams);
+        }
         if ($orderBy) {
             array_push($params, $orderBy, $isAsc);
             $query = $query . " order by ? ? ";
@@ -68,11 +72,26 @@ class DatabaseConnector
             $query = $query . " OFFSET ?";
         }
         $query = $query . ";";
-        return $this->getQueryExecuted($query, $params);
+
+        return $this->queryExecuted($query, $params);
     }
     public  function getOne(string $table, string $id)
     {
         $query = "SELECT * FROM " . $table . " WHERE id=? ;";
-        return $this->getQueryExecuted($query, [$id]);
+        return $this->queryExecuted($query, [$id]);
+    }
+
+    public  function search(string $select, array $fields, string $searchTerm, int $limit = 12, int $offset = 0)
+    {
+        $params = [];
+        $where = " WHERE " . $fields[0] . " LIKE ? ";
+        array_push($params, '%' . $searchTerm . '?');
+        $fieldLength = count($fields);
+        for ($i = 1; $i < $fieldLength; $i++) {
+            $where = $where . " OR " . $fields[$i] . " LIKE ?";
+            // $tempParam  = "%" . $searchTerm . "%";
+            array_push($params, '%' . $searchTerm . '%');
+        }
+        return $this->getQuery($select, $where, $params, $limit, $offset);
     }
 }

@@ -23,7 +23,7 @@
                             for ($i = 0; $i < $length; $i++) {;
                                 $name = $categoryList[$i]->name;
                                 $id = $categoryList[$i]->id;
-                                echo "<li><a class='dropdown-item' href='/pages/category.php?categoryId=$id'>$name</a></li>";
+                                echo "<li><a class='dropdown-item' href='/category.php?categoryId=$id'>$name</a></li>";
                             }
                         }
 
@@ -35,7 +35,7 @@
                     <a class="nav-link" href="#footer">Liên hệ</a>
                 </li>
             </ul>
-            <form action="/pages/search.php" class="d-flex mb-0" method="get">
+            <form action="/search.php" class="d-flex mb-0" method="get">
                 <input class="form-control me-2" placeholder="Sản phẩm" name="search">
                 <button class="btn btn-outline-success text-nowrap" type="submit">Tìm kiếm</button>
             </form>
@@ -43,13 +43,13 @@
                 <?php
 
                 if (isset($_SESSION['logined'])) {
-                    echo '<a href="/pages/user.php" class="ms-lg-4 text-black fs-4" ><i class="fa-solid fa-circle-user" ></i></a>';
+                    echo '<a href="/user.php" class="ms-lg-4 text-black fs-4" ><i class="fa-solid fa-circle-user" ></i></a>';
                 } else {
-                    echo '<a href="/pages/login.php" class="ms-lg-4 text-black fs-6">Login</a>';
+                    echo '<a href="/login.php" class="ms-lg-4 text-black fs-6">Login</a>';
                 }
                 ?>
 
-                <a href="/pages/cart.php" class="ms-4 text-black fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="/cart.php" class="ms-4 text-black fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
                 <?php
 
                 if (isset($_SESSION['logined'])) {

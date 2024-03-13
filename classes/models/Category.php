@@ -21,7 +21,7 @@ class Category
     public static function getAll()
     {
         $database = new DatabaseConnector();
-        $sql = $database->getAll('categories');
+        $sql = $database->getQuery('select* from categories');
         $tempList = [];
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             array_push($tempList, new Category($row));
