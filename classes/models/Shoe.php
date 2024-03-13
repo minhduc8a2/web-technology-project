@@ -65,8 +65,9 @@ class Shoe
     public static function getShoesByCategory(int $categoryId, int $limit = 12, int $offset = 0)
     {
 
+
         $database = new DatabaseConnector();
-        $sql = $database->getQuery('SELECT id,name, price, imageurl FROM shoes, categories ', 'WHERE categories.id = ? AND shoes.category = categories.name', [$categoryId], $limit, $offset);
+        $sql = $database->getQuery('SELECT shoes.id as id, shoes.name as name, price, imageurl, category, description, instock,   sold FROM shoes, categories ', 'WHERE categories.id = ? AND shoes.category = categories.name', [$categoryId], $limit, $offset);
         $tempList = [];
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             array_push($tempList, new Shoe($row));

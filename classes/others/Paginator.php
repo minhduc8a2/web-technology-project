@@ -1,4 +1,7 @@
 <?php
+
+namespace Classes\Others;
+
 class Paginator
 {
     public int $totalPages;

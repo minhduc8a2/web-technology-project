@@ -31,7 +31,7 @@
                         $price = $shoeList[$i]->getFormatPrice();
                         echo "
             <div class='col-lg-3  col-6'>
-            <a class='card w-100 border-0 shadow rounded-4 ' href='/pages/product.php?id=$id'>
+            <a class='card w-100 border-0 shadow rounded-4 ' href='/product.php?id=$id'>
               <div class='image-wrapper overflow-hidden rounded-4'>
                 <img src=' $imageurl ' class='card-img-top  shadow-sm card-image ' alt='giay adidas'>
               </div>
@@ -57,18 +57,18 @@
             <ul class=" pagination ">
                 <li class="page-item<?= $paginator->getPrevPage() ?
                                         '' : ' disabled' ?>">
-                    <a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
+                    <a role="button" href="/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
                         <span>&laquo;</span>
                     </a>
                 </li>
                 <?php foreach ($pages as $page) : ?>
                     <li class="page-item<?= $paginator->currentPage === $page ?
-                                            ' active' : '' ?>"><a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
+                                            ' active' : '' ?>"><a role="button" href="/category.php?categoryId=<?= $categoryId ?>&page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
                     </li>
                 <?php endforeach ?>
                 <li class="page-item<?= $paginator->getNextPage() ?
                                         '' : ' disabled' ?>">
-                    <a role="button" href="/pages/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
+                    <a role="button" href="/category.php?categoryId=<?= $categoryId ?>&page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
                         <span>&raquo;</span>
                     </a>
                 </li>
