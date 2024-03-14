@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="/services/cartItems/create.php" method="post">
+                <form action="/product.php?id=<?= $id ?>" method="post">
                     <input type='hidden' name='id' value='<?= $id ?>' />
 
                     <button class="btn btn-dark py-3 px-4">Thêm vào giỏ hàng</button>

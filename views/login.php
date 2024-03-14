@@ -1,5 +1,4 @@
 <?php
-session_start();
 if (isset($_SESSION['logined'])) {
     // echo $_SESSION['logined'];
     header('location: /');
@@ -49,9 +48,8 @@ if (isset($_SESSION['logined'])) {
                     $_SESSION['sign_in_form_state'] = null;
                 }
 
-
                 ?>
-                <form action="/services/users/signin.php" method="post" class="p-lg-5 p-2 shadow rounded-4">
+                <form action="/login.php" method="post" class="p-lg-5 p-2 shadow rounded-4">
 
 
                     <div class=" mb-3">

@@ -1,19 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION['logined'])) {
-    header('location: /pages/login.php');
-}
-$userId  = $_SESSION['logined']['id'];
-
-$userName  = $_SESSION['logined']['name'];
-$email  = $_SESSION['logined']['email'];
-$phoneNumber  = $_SESSION['logined']['phoneNumber'];
-$address  = $_SESSION['logined']['address'];
-$avatar  = $_SESSION['logined']['avatar'];
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,7 +31,7 @@ $avatar  = $_SESSION['logined']['avatar'];
                     <div class="d-flex flex-column gap-2 align-items-start">
                         <a class="btn btn-dark" style="width: fit-content;" href="/pages/billList.php">Xem đơn hàng</a>
                         <?php
-                        if ($_SESSION['logined']['role'] == 'admin') {
+                        if ($_SESSION['logined']->role == 'admin') {
                             echo '<a class="btn btn-danger" style="width: fit-content;" href="/pages/admin.php">Quản lý website</a>';
                         }
                         ?>
@@ -59,7 +43,7 @@ $avatar  = $_SESSION['logined']['avatar'];
             </div>
             <div class="col-12 col-lg-6">
                 <h1 class="mb-5">Thông tin tài khoản</h1>
-                <form action="/services/users/update.php" method="post" class="p-lg-5 p-4 shadow rounded-4" enctype='multipart/form-data'>
+                <form action="/user.php" method="post" class="p-lg-5 p-4 shadow rounded-4" enctype='multipart/form-data'>
                     <?php
                     if (isset($_SESSION['update_user']) && $_SESSION['update_user'] == true) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>

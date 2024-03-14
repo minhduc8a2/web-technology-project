@@ -1,12 +1,8 @@
 <?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-require_once dirname(__DIR__, 1) . '/services/utils.php';
+require dirname(__DIR__, 1) . '/vendor/autoload.php';
 
-session_start();
-if (!isset($_SESSION['logined'])) {
+use Classes\Others\Utility as Utility;
 
-    header('location: /pages/login.php');
-}
 
 if (isset($_SESSION["update_quantity"])) {
     if ($_SESSION["update_quantity"] == true) {
@@ -47,26 +43,20 @@ if (isset($_SESSION["delete_shoe"])) {
                 <ul class="mt-5 p-0 ">
                     <?php
                     $total = 0;
-                    $userId = $_SESSION['logined']['id'];
+                    $mixListLength = count($mixList);
+                    if ($mixList > 0) {
+                        // output data of each row
 
-                    $sql = $conn->prepare("SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity  FROM shoes, cartItems
-                    where shoes.id=shoeId and userId=?
-                    ;");
-                    $sql->bind_param('i', $userId);
-                    $sql->execute();
-                    $result = $sql->get_result();
-                    
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $shoeName = $row['name'];
-                            $id = $row['id'];
-                            $imageurl = $row['imageurl'];
-                            $rawPrice = $row['price'];
-                            $price = moneyFormat($row['price']);
-                            $instock = $row['instock'];
-                            $quantity = $row['quantity'];
-                            $total += $row['price'] * $quantity;
+                        for ($i = 0; $i < $mixListLength; $i++) {
+                            $id = $mixList[$i]['shoe']->id;
+                            $imageurl = $mixList[$i]['shoe']->imageurl;
+                            $name = $mixList[$i]['shoe']->name;
+                            $price = $mixList[$i]['shoe']->getFormatPrice();
+                            $rawPrice = $mixList[$i]['shoe']->price;
+                            $sold = $mixList[$i]['shoe']->sold;
+                            $instock = $mixList[$i]['shoe']->instock;
+                            $quantity = $mixList[$i]['quantity'];
+                            $total += $rawPrice * $quantity;
                             echo "<li class='mt-2'>
                             <div class='cart-item bg-white d-flex flex-lg-row flex-column justify-content-between gap-2 shadow p-4 rounded-2'>
                                 <div class='d-flex align-items-center gap-3'>
@@ -76,20 +66,23 @@ if (isset($_SESSION["delete_shoe"])) {
                                 </div>
                                     <img src='$imageurl' alt='image' style='max-width: 100px; width: 100%;' class='rounded-4'>
                                     <div class='description'>
-                                        <h5>$shoeName</h5>
+                                        <h5>$name</h5>
                                         <h6 class='text-danger'>$price <span class='text-decoration-underline'>đ</span></h6>
                                     </div>
                                 </div>
                                 <div class='d-flex align-items-center'>
                                     <div class='update-quantity d-flex gap-2' style='height: fit-content;'>
-                                    <form action='/services/cartItems/updateQuantity.php' method='post' class='d-flex gap-2 align-items-center m-0'>
+                                    <form action='/cart.php' method='post' class='d-flex gap-2 align-items-center m-0'>
                                         
                                         <input type='number' name='quantity' max=$instock min=1 value=$quantity class='p-2'>
                                         <input type='hidden' name='id' value='$id'/>
+                                        <input type='hidden' name='changeQuantity' value='true'/>
+
                                         <button class='btn btn-danger' type='submit'>Cập nhật</button>
                                     </form>
-                                     <form action='/services/cartItems/delete.php' method='post' class='m-0 d-flex align-items-center'>
+                                     <form action='/cart.php' method='post' class='m-0 d-flex align-items-center'>
                                         <input type='hidden' name='id' value='$id'/>
+                                        <input type='hidden' name='delete' value='true'/>
                                         <button class='border-0 bg-transparent text-danger fs-5' type='submit'><i class='fa-solid fa-trash-can'></i></button>
                                      </form>   
                                         
@@ -98,7 +91,7 @@ if (isset($_SESSION["delete_shoe"])) {
                             </div>
                         </li>";
                         }
-                        $total = moneyFormat($total);
+                        $total = Utility::moneyFormat($total);
                     }
 
                     ?>
@@ -116,7 +109,6 @@ if (isset($_SESSION["delete_shoe"])) {
     </div>
     <?php
     include dirname(__DIR__) . "/components/footer.php";
-    $conn->close();
     ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

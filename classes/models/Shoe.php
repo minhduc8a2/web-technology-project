@@ -74,6 +74,18 @@ class Shoe
         }
         return $tempList;
     }
+    public static function getShoesAndQuantityInCart(int $userId, int|bool $limit = false, int|bool $offset = false)
+    {
+
+
+        $database = new DatabaseConnector();
+        $sql = $database->getQuery('SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity, description, category, sold  FROM shoes, cartItems', 'where shoes.id=shoeId and userId=?', [$userId], $limit, $offset);
+        $tempList = [];
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($tempList, ['shoe' => new Shoe($row), 'quantity' => $row['quantity']]);
+        }
+        return $tempList;
+    }
     public static function getShoesCount(string|false $where = false, array $whereParams = [])
     {
         $database = new DatabaseConnector();

@@ -53,7 +53,7 @@
                 <?php
 
                 if (isset($_SESSION['logined'])) {
-                    echo '<form action="/services/users/logout.php" method="post" class="d-inline ms-4 text-black fs-5">
+                    echo '<form action="/login.php" method="post" class="d-inline ms-4 text-black fs-5">
                     <input type="hidden" name="logOut" value="logOut" />
                     <button type="submit" class="border-0 bg-transparent"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
                 </form>';

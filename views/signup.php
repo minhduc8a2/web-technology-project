@@ -1,10 +1,3 @@
-<?php
-session_start();
-
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,7 +66,7 @@ session_start();
 
 
                 ?>
-                <form action="/services/users/signup.php" method="post" class="p-lg-5 p-2 shadow rounded-4" enctype="multipart/form-data" id="form-sign-up">
+                <form action="/signUp.php" method="post" class="p-lg-5 p-2 shadow rounded-4" enctype="multipart/form-data" id="form-sign-up">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Họ tên</label>
                         <input type="text" class="form-control" id="inputName" name="name" value='<?= $name ?>'>
@@ -113,7 +106,7 @@ session_start();
                         </div>
                     </div>
                     <button class="btn btn-primary" id="submit-btn"><span class="spinner-border spinner-border-sm  me-2" hidden></span>Đăng ký</button>
-                    <p class="mt-4">Đã có tài khoản? <a href="signin.php" class="text-decoration-underline fw-bold text-black">Đăng nhập</a></p>
+                    <p class="mt-4">Đã có tài khoản? <a href="/login.php" class="text-decoration-underline fw-bold text-black">Đăng nhập</a></p>
                 </form>
             </div>
         </div>

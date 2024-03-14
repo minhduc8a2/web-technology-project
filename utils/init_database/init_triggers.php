@@ -52,6 +52,23 @@ try {
 }
 try {
     $sql = "
+    CREATE PROCEDURE create_cartitem (IN userId INT, IN shoeId INT )
+    BEGIN
+        IF NOT EXISTS ( SELECT * FROM cartItems where cartItems.userId = userId AND cartItems.shoeId = shoeId) then
+            INSERT INTO cartItems (userId, shoeId) values (userId, shoeId);
+        end if;
+    END;
+    ";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<br>procedure create_cartitem  created successfully";
+    }
+} catch (\Throwable $th) {
+    echo $th;
+}
+try {
+    $sql = "
     CREATE TRIGGER auto_create_category_on_update
     AFTER UPDATE ON shoes
     FOR EACH ROW 
