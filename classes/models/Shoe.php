@@ -21,14 +21,14 @@ class Shoe
     public $sold;
     function __construct($row)
     {
-        $this->id = intval($row['id']);
-        $this->name = htmlspecialchars($row['name']);
-        $this->category = htmlspecialchars($row['category']);
-        $this->description = htmlspecialchars($row['description']);
-        $this->imageurl = htmlspecialchars($row['imageurl']);
-        $this->price = intval(htmlspecialchars($row['price']));
-        $this->instock = htmlspecialchars($row['instock']);
-        $this->sold = htmlspecialchars($row['sold']);
+        $this->id =  intval($row['id']);
+        $this->name = isset($row['name']) ? htmlspecialchars($row['name']) : '';
+        $this->category = isset($row['category']) ? htmlspecialchars($row['category']) : '';
+        $this->description = isset($row['description']) ? htmlspecialchars($row['description']) : '';
+        $this->imageurl = isset($row['imageurl']) ? htmlspecialchars($row['imageurl']) : '';
+        $this->price = isset($row['price']) ? intval(htmlspecialchars($row['price'])) : 0;
+        $this->instock = isset($row['instock']) ? htmlspecialchars($row['instock']) : 0;
+        $this->sold = isset($row['sold']) ? htmlspecialchars($row['sold']) : 0;
     }
     public static function getAll()
     {
@@ -80,6 +80,38 @@ class Shoe
 
         $database = new DatabaseConnector();
         $sql = $database->getQuery('SELECT shoes.name as name,shoes.id as id, price, imageurl, instock,quantity, description, category, sold  FROM shoes, cartItems', 'where shoes.id=shoeId and userId=?', [$userId], $limit, $offset);
+        $tempList = [];
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($tempList, ['shoe' => new Shoe($row), 'quantity' => $row['quantity']]);
+        }
+        return $tempList;
+    }
+    public static function getShoesAndQuantityInOrder(int $userId)
+    {
+        $database = new DatabaseConnector();
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['shoeList'])) {
+
+            $shoeListId = $_POST['shoeList'];
+
+            $query = "select shoes.name as name,shoes.id as id, price, imageurl, quantity from shoes, cartItems where shoes.id=shoeId and userId=? and (shoes.id = ? ";
+
+            for ($i = 1; $i < count($shoeListId); $i++) {
+                $query = $query . " OR shoes.id = ? ";
+            }
+            $query = $query . ");";
+            $sql = $database->queryExecuted($query, [$userId, ...$shoeListId]);
+            $tempList = [];
+            while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+                array_push($tempList, ['shoe' => new Shoe($row), 'quantity' => $row['quantity']]);
+            }
+            $_SESSION['mixList'] =   $tempList;
+        }
+    }
+    public static function getShoesByBill(int $billId)
+    {
+        $database = new DatabaseConnector();
+
+        $sql = $database->queryExecuted("select shoes.id as id, shoes.name as name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = ? and billItems.shoeId = shoes.id ;", [$billId]);
         $tempList = [];
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             array_push($tempList, ['shoe' => new Shoe($row), 'quantity' => $row['quantity']]);

@@ -1,54 +1,7 @@
 <?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-require_once dirname(__DIR__, 1) . '/services/utils.php';
 
-session_start();
-if (!isset($_SESSION['logined'])) {
+use Classes\Others\Utility as Utility;
 
-    header('location: /pages/login.php');
-}
-
-$billId = $_GET['id'];
-$userId = $_SESSION['logined']['id'];
-$role = $_SESSION['logined']['role'];
-
-
-
-
-//get bill
-$sql = $conn->prepare("select* from bills where id=? and userId=?;");
-$sql->bind_param('ii', $billId, $userId);
-if ($role == 'admin') {
-    $sql = $conn->prepare("select* from bills where id=? ;");
-    $sql->bind_param('i', $billId);
-}
-try {
-    $sql->execute();
-    $result = $sql->get_result();
-
-    if ($result->num_rows > 0) {
-        // output data of each row
-        $bill = $result->fetch_assoc();
-        //get bill items
-        $sql = $conn->prepare("select name, billItems.price as price, imageurl, quantity from shoes, billItems where billId = ? and billItems.shoeId = shoes.id ;");
-        $sql->bind_param('i', $billId);
-        $sql->execute();
-        $result = $sql->get_result();
-
-        $shoeList = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                array_push($shoeList, $row);
-            }
-        }
-    } else {
-        echo 'No bill.';
-        exit();
-    }
-} catch (\Throwable $th) {
-    echo $th;
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -91,12 +44,12 @@ try {
             }
 
 
-            $id = $bill['id'];
-            $userName = $bill['userName'];
-            $phoneNumber = $bill['phoneNumber'];
-            $address = $bill['address'];
-            $createdAt = $bill['createdAt'];
-            $status = $bill['status'];
+            $id = $bill->id;
+            $userName = $bill->userName;
+            $phoneNumber = $bill->phoneNumber;
+            $address = $bill->address;
+            $createdAt = $bill->createdAt;
+            $status = $bill->status;
             echo "
             <div class='d-flex align-items-center gap-2'>
                 <p class='fs-6 mb-0  fw-bold text-black '   >Mã đơn hàng: $id</p>";
@@ -120,15 +73,17 @@ try {
         <ul class="mt-2 p-0 ">
             <?php
             $total = 0;
-           
 
-            foreach ($shoeList as &$row) {
-                $shoeName = $row['name'];
 
-                $imageurl = $row['imageurl'];
-                $price = moneyFormat($row['price']);
+            $length = count($mixList);
+            for ($i = 0; $i < $length; $i++) {
+                $row = $mixList[$i];
+                $shoeName = $row['shoe']->name;
+
+                $imageurl = $row['shoe']->imageurl;
+                $price = $row['shoe']->getFormatPrice();
                 $quantity = $row['quantity'];
-                $total += $row['price'] * $quantity;
+                $total += $row['shoe']->price * $quantity;
                 echo "<li class='mt-2'>
                             <div class='cart-item bg-white d-flex flex-lg-row flex-column justify-content-between gap-2  p-4 '>
                                 <div class='d-flex align-items-center gap-3'>
@@ -144,8 +99,7 @@ try {
                             </div>
                         </li>";
             }
-
-            $total = moneyFormat($total);
+            $total = Utility::moneyFormat($total);
 
             ?>
         </ul>

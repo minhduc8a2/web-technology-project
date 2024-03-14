@@ -138,6 +138,7 @@ if (isset($_SESSION["delete_shoe"])) {
                 if (element.checked) shoeList.push(element.value);
 
             }
+            
             if (shoeList.length > 0) {
                 $.ajax({
                     type: "POST",

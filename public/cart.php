@@ -18,5 +18,4 @@ CartItem::delete();
 $categoryList = Category::getAll();
 $userId = $_SESSION['logined']->id;
 $mixList = Shoe::getShoesAndQuantityInCart($userId);
-
 Utility::renderView('cart', ["categoryList" => $categoryList, 'mixList' => $mixList]);
