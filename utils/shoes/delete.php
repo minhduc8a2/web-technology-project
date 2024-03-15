@@ -16,30 +16,4 @@ if (!isset($_SESSION["logined"]) || (isset($_SESSION["logined"]) && $_SESSION["l
     header("location: /pages/login.php");
     exit('Unauthenticated');
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && !empty($_POST["id"])) {
 
-    $shoeId = $_POST["id"];
-    $imageurl = $_POST["imageurl"];
-    try {
-        $temp  = explode('/', $imageurl);
-        $imageId = $temp[count($temp) - 2] . '/' . explode('.', $temp[count($temp) - 1])[0];
-        (new UploadApi())->destroy($imageId);
-    } catch (\Throwable $th) {
-        echo $th;
-        exit();
-    }
-    $sql = $conn->prepare("delete from shoes WHERE id=? ;");
-    $sql->bind_param('i', $shoeId);
-    try {
-
-        if ($sql->execute() === TRUE) {
-            $_SESSION["delete_shoe"] = true;
-        } else {
-            $_SESSION["delete_shoe"] = false;
-        }
-    } catch (\Throwable $th) {
-        echo $th;
-        exit();
-    }
-    header("location: /pages/admin.php");
-}

@@ -40,7 +40,17 @@ class Bill
         $sql = $database->getQuery('select* from bills');
         $tempList = [];
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
-            array_push($tempList, new Shoe($row));
+            array_push($tempList, new Bill($row));
+        }
+        return $tempList;
+    }
+    public static function getAllForUser(int $userId)
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->getQuery('select* from bills', 'where userId = ?', [$userId]);
+        $tempList = [];
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($tempList, new Bill($row));
         }
         return $tempList;
     }

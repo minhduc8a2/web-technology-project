@@ -1,40 +1,12 @@
 <?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-require_once dirname(__DIR__, 1) . '/services/shoes/utils.php';
-require_once dirname(__DIR__, 1) . '/services/Paginator.php';
 
-session_start();
-if (!isset($_SESSION['logined'])) {
 
-    header('location: /pages/login.php');
-    exit();
-}
 
-if (isset($_SESSION['logined']) && $_SESSION['logined']['role'] != 'admin') {
-    unset($_SESSION['logined']);
-    header('location: /pages/login.php');
-    exit();
-}
 
-$shoeList = [];
-$limit = $_GET['limit'] ?? 12;
-$page = $_GET['page'] ?? 1;
-$offset = $page ? ($page - 1) * $limit : 0;
-$totalShoes = getShoesCount();
-$paginator = new Paginator($limit, $totalShoes, $page);
-$pages = $paginator->getPages(length: 3);
-try {
-    $result = getShoesResult($limit, $offset);
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while ($row = $result->fetch_assoc()) {
-            array_push($shoeList, $row);
-        }
-    }
-} catch (\Throwable $th) {
-    echo 'Error with server.';
-    exit();
-}
+
+
+
+
 if (isset($_SESSION['update_shoe'])) {
     if ($_SESSION['update_shoe']['state'] == true) {
         echo '<script>alert("Cập nhật thành công!")</script>';
@@ -116,7 +88,7 @@ if (isset($_SESSION['delete_shoe'])) {
                     </h2>
                     <div id='collapseCreate' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
                         <div class='accordion-body'>
-                            <form action='/services/shoes/create.php' method='post' class='p-lg-5 p-2 shadow rounded-4' enctype='multipart/form-data'>
+                            <form action='/admin.php' method='post' class='p-lg-5 p-2 shadow rounded-4' enctype='multipart/form-data'>
                                 <div class='mb-3'>
                                     <label class='form-label'>Tên giày</label>
                                     <input type='text' class='form-control' name='name' value='Example'>
@@ -166,14 +138,14 @@ if (isset($_SESSION['delete_shoe'])) {
                 <?php
                 foreach ($shoeList as &$shoe) {
 
-                    $shoeName = $shoe['name'];
-                    $id = $shoe['id'];
-                    $category = $shoe['category'];
-                    $description = $shoe['description'];
-                    $price = $shoe['price'];
-                    $instock = $shoe['instock'];
-                    $sold = $shoe['sold'];
-                    $imageurl = $shoe['imageurl'];
+                    $shoeName = $shoe->name;
+                    $id = $shoe->id;
+                    $category = $shoe->category;
+                    $description = $shoe->description;
+                    $price = $shoe->price;
+                    $instock = $shoe->instock;
+                    $sold = $shoe->sold;
+                    $imageurl = $shoe->imageurl;
                     echo "
                 <div class='accordion-item'>
                     <h2 class='accordion-header'>
@@ -183,9 +155,10 @@ if (isset($_SESSION['delete_shoe'])) {
                     </h2>
                     <div id='collapse$id' class='accordion-collapse collapse' data-bs-parent='#accordionExample'>
                         <div class='accordion-body'>
-                            <form action='/services/shoes/delete.php' method='post' class='m-0 d-flex align-items-center shadow-sm p-4 rounded-4'>
+                            <form action='/admin.php' method='post' class='m-0 d-flex align-items-center shadow-sm p-4 rounded-4'>
                                 <input type='hidden' name='id' value='$id'/>
                                 <input type='hidden' name='imageurl' value='$imageurl'/>
+                                <input type='hidden' name='delete' />
                                 <button class='border-0 bg-transparent text-danger fs-5' type='submit' id='del-btn'>Xóa sản phẩm <i class='fa-solid fa-trash-can'></i></button>
                             </form> 
                             <form action='/services/shoes/update.php' method='post' class='p-lg-5 p-2 shadow rounded-4 mt-4' enctype='multipart/form-data'>

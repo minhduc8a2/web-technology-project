@@ -21,7 +21,7 @@ class Shoe
     public $sold;
     function __construct($row)
     {
-        $this->id =  intval($row['id']);
+        $this->id = isset($row['id']) ?  intval($row['id']) : '';
         $this->name = isset($row['name']) ? htmlspecialchars($row['name']) : '';
         $this->category = isset($row['category']) ? htmlspecialchars($row['category']) : '';
         $this->description = isset($row['description']) ? htmlspecialchars($row['description']) : '';
@@ -30,10 +30,10 @@ class Shoe
         $this->instock = isset($row['instock']) ? htmlspecialchars($row['instock']) : 0;
         $this->sold = isset($row['sold']) ? htmlspecialchars($row['sold']) : 0;
     }
-    public static function getAll()
+    public static function getAll(int|bool $limit = false, int|bool $offset = false)
     {
         $database = new DatabaseConnector();
-        $sql = $database->getQuery('select* from shoes');
+        $sql = $database->getQuery('select* from shoes', false, [], $limit, $offset);
         $tempList = [];
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             array_push($tempList, new Shoe($row));
@@ -50,6 +50,23 @@ class Shoe
             return new Shoe($row);
         }
         return NULL;
+    }
+    public static function deleteOne(int $id)
+    {
+        $database = new DatabaseConnector();
+        return $database->deleteOne('shoes', $id);
+
+    }
+    public static function create($newShoe)
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->queryNotExecuted("INSERT INTO shoes (name, description,category, price,sold, instock,imageurl)
+        VALUES (?,?,?,?,?,?,?) ;", [$newShoe->name, $newShoe->description, $newShoe->category, $newShoe->price, $newShoe->sold, $newShoe->instock, $newShoe->imageurl]);
+
+        if ($sql->execute()) {
+            return true;
+        }
+        return false;
     }
     public static function search(string $searchTerm, int $limit = 12, int $offset = 0)
     {

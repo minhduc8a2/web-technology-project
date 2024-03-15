@@ -80,6 +80,12 @@ class DatabaseConnector
         $query = "SELECT * FROM " . $table . " WHERE id=? ;";
         return $this->queryExecuted($query, [$id]);
     }
+    public  function deleteOne(string $table, string $id)
+    {
+        $query = "DELETE FROM " . $table . " WHERE id=? ;";
+        $sql =  $this->queryNotExecuted($query, [$id]);
+        return $sql->execute();
+    }
 
     public  function search(string $select, array $fields, string $searchTerm, int $limit = 12, int $offset = 0)
     {

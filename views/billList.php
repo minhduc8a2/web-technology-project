@@ -1,31 +1,10 @@
 <?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-require_once dirname(__DIR__, 1) . '/services/utils.php';
 
-session_start();
-if (!isset($_SESSION['logined'])) {
+require dirname(__DIR__, 1) . '/vendor/autoload.php';
 
-    header('location: /pages/login.php');
-}
+use Classes\Others\Utility as Utility;
 
-$userId = $_SESSION['logined']['id'];
-//get billlist
-$sql = $conn->prepare("select* from bills where userId=?;");
-$sql->bind_param('i', $userId);
-$sql->execute();
-$billList = [];
-try {
-    $result = $sql->get_result();
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while ($row = $result->fetch_assoc()) {
-            array_push($billList, $row);
-        }
-    }
-} catch (\Throwable $th) {
-    echo 'Error with server.';
-    exit();
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,23 +27,19 @@ try {
 
 
         <h2 class="text-center">Danh sách đơn hàng</h2>
-
         <ul class="mt-5 p-0 ">
             <?php
-
-           
-
             foreach ($billList as &$row) {
-                $id = $row['id'];
-                $userName = $row['userName'];
-                $phoneNumber = $row['phoneNumber'];
-                $address = $row['address'];
-                $createdAt = $row['createdAt'];
-                $status = $row['status'];
-                $total = moneyFormat($row['total']);
+                $id = $row->id;
+                $userName = $row->userName;
+                $phoneNumber = $row->phoneNumber;
+                $address = $row->address;
+                $createdAt = $row->createdAt;
+                $status = $row->status;
+                $total = Utility::moneyFormat($row->total);
                 echo "
                 <li class='p-4 shadow rounded-2 mt-4'>
-                    <a class='fs-6 mb-2 text-decoration-underline fw-bold text-black' href='/pages/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
+                    <a class='fs-6 mb-2 text-decoration-underline fw-bold text-black' href='/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
 
                     <p class=' mb-2'>Đơn hàng được tạo lúc: <span class='fw-bold'>$createdAt</span></p>
                     <p class=' mb-2'>Người nhận: <span class='fw-bold'>$userName</span> </p>
@@ -89,7 +64,6 @@ try {
 
     <?php
     include dirname(__DIR__) . "/components/footer.php";
-    $conn->close();
     ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
