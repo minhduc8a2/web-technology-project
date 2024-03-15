@@ -26,7 +26,7 @@ use Classes\Others\Utility as Utility;
             <div class="col-12 col-lg-8">
                 <h2>Thông tin đơn hàng</h2>
                 <?php
-                if (isset($_SESSION['create_bill'])) {
+                if (isset($_SESSION['create_bill']) && $_SESSION['create_bill'] == FALSE) {
                     echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                         Tạo đơn hàng thất bại!
                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -81,7 +81,10 @@ use Classes\Others\Utility as Utility;
                 <h2>Thông tin thanh toán</h2>
                 <div class="mt-5 p-5 shadow">
                     <p class=" fs-4 fw-bold  "><span>Tổng cộng: </span> <span class="text-danger"><?= $total ?></span> <span class="text-decoration-underline text-danger">đ</span></p>
-                    <button class="btn btn-primary px-4 py-2 fs-5 rounded-3 mt-4 shadow" onclick="createBill()">Đặt hàng</button>
+                    <form action="order.php" method="post">
+                        <input type="hidden" name="createBill" value="true">
+                        <button class="btn btn-primary px-4 py-2 fs-5 rounded-3 mt-4 shadow">Đặt hàng</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -91,11 +94,7 @@ use Classes\Others\Utility as Utility;
     ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        function createBill() {
-            location.href = "/services/bills/create.php"
-        }
-    </script>
+
 </body>
 
 </html>

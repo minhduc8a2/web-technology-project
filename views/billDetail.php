@@ -54,8 +54,9 @@ use Classes\Others\Utility as Utility;
             <div class='d-flex align-items-center gap-2'>
                 <p class='fs-6 mb-0  fw-bold text-black '   >Mã đơn hàng: $id</p>";
             if ($status == "pending") {
-                echo "<form action='/services/bills/cancel.php' method='post' class='m-0'>
+                echo "<form action='/billDetail.php?id={$id}' method='post' class='m-0'>
                 <input type='hidden' name='id' value='$id'>
+                <input type='hidden' name='cancelBill' value='true'>
                 <button class='border-0 bg-transparent text-decoration-underline text-danger' type='submit' >Hủy đơn hàng</button>
             </form>";
             }

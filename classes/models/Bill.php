@@ -65,7 +65,52 @@ class Bill
         }
         return NULL;
     }
+    public static function changeStatus(int $id, string $status)
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->queryNotExecuted('UPDATE bills SET status = ? WHERE id = ?', [$status, $id]);
+        return $sql->execute();
+    }
+    public static function cancel($id)
+    {
 
+        Bill::changeStatus($id, 'cancelled');
+    }
+
+    public static function delete($id)
+    {
+        $database = new DatabaseConnector();
+
+        $sql = $database->queryNotExecuted("delete from bills where id = ?", [$id]);
+        return $sql->execute();
+    }
+    public static function create($userId, $userName, $phoneNumber, $address, $total, $mixList)
+    {
+        $database = new DatabaseConnector();
+
+        $sql = $database->queryNotExecuted("INSERT INTO bills (userId,userName,phoneNumber, address, total) VALUES (?,?,?,?,?);", [$userId, $userName, $phoneNumber, $address, $total]);
+        try {
+            if ($sql->execute() === TRUE) {
+                $bill_id = $database->conn->lastInsertId();
+
+                $length = count($mixList);
+                for ($i = 0; $i < $length; $i++) {
+                    $shoeId = $mixList[$i]['shoe']->id;
+                    $price = $mixList[$i]['shoe']->price;
+                    $quantity = $mixList[$i]['quantity'];
+                    $sql = $database->queryNotExecuted("INSERT INTO billItems (billId,shoeId,price, quantity) VALUES (?,?,?,?);", [$bill_id, $shoeId, $price, $quantity]);
+                    if ($sql->execute() !== TRUE) {
+                        Bill::delete($bill_id);
+                        return  FALSE; // creating bill is not successful
+
+                    }
+                }
+                return [TRUE, 'billId' => $bill_id];
+            }
+        } catch (\Throwable $th) {
+        }
+        return  FALSE;
+    }
     function getFormatTotal()
     {
         return Utility::moneyFormat($this->total);
