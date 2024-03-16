@@ -2,10 +2,10 @@
 
 Học kỳ 2, Năm học 2023-2024
 
-**MSSV **: B2205863
+**MSSV**: B2205863
 
-**Họ tên **: Lê Minh Đức
+**Họ tên**: Lê Minh Đức
 
-**Lớp học phần **: CT275/01
+**Lớp học phần**: CT275/01
 
-**Tên dự án **: Website thương mại điện tử bán giày Adidas
+**Tên dự án**: Website thương mại điện tử bán giày Adidas
