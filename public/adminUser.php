@@ -15,7 +15,7 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 
 if (!isset($_SESSION['logined']) || (isset($_SESSION['logined']) && $_SESSION['logined']->role != 'admin')) {
     unset($_SESSION['logined']);
-    header('location: /pages/login.php');
+    header('location: /login.php');
     exit();
 }
 
@@ -58,14 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create'])) {
     }
 }
 
-//end of check if admin want to create shoe
+//end of check if admin want to create user
 
 //check if admin want to delete user
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"]) && isset($_POST["id"]) && !empty($_POST["id"])) {
 
     $userId = $_POST["id"];
-    $imageurl = $_POST["imageurl"]?? '';
+    $imageurl = $_POST["imageurl"] ?? '';
     Utility::deleteImageOnCloudinaryByURL($imageurl);
     $check = User::deleteOne($userId);
     if ($check) {
@@ -74,8 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"]) && isset($_P
         $_SESSION["delete_user"] = false;
     }
 }
-//end of check if admin want to delete shoe
-// check if admin want to update shoe
+//end of check if admin want to delete user
+// check if admin want to update user
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && isset($_POST["update"])) {
 
@@ -93,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && isset($_POST[
         if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error'])) {
             Utility::deleteImageOnCloudinaryByURL($newUser->avatar);
             ['imageurl' => $avatar, 'imageId' => $avatarId] = Utility::uploadImage($_FILES['imageFile']) ?? ['', ''];
+            $newUser->avatar = $avatar;
         }
         //
         if (isset($checkExist) && !$checkExist) {
@@ -108,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && isset($_POST[
         $_SESSION['error_list'] = array('errorList' => $errorList);
     }
 }
-// end of check if admin want to update shoe
+// end of check if admin want to update user
 
 $categoryList = Category::getAll();
 $limit = $_GET['limit'] ?? 12;

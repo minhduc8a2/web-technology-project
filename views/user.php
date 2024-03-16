@@ -20,7 +20,7 @@
                 <h1 class="mb-5">Chức năng người dùng</h1>
                 <div class="d-flex flex-lg-row flex-column p-4 justify-content-start gap-4 align-items-center">
                     <?php
-                    if ($avatar == 'null') {
+                    if (!$avatar) {
                         echo '<img src="../assets/images/user.png" alt="" class="img-fluid  d-lg-block d-none " style="max-width: 200px;">';
                         echo "<img src='../assets/images/user.png'  class='img-fluid rounded-circle d-lg-none w-75' >";
                     } else {

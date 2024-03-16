@@ -102,7 +102,7 @@ class Utility
         }
     }
 
-    public static function uploadImage($file,)
+    public static function uploadImage($file)
     {
         Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp8@dqqetbr1m?secure=true');
         try {
@@ -137,5 +137,14 @@ class Utility
             return true;
         }
         return false;
+    }
+    public static function standardizeString($string, $option = '')
+    {
+        switch ($option) {
+            case 'name':
+                return ucwords(strtolower(trim($string)));
+            default:
+                return strtolower(trim($string));
+        }
     }
 }

@@ -1,9 +1,8 @@
 <?php
-require_once dirname(__DIR__, 1) . '/connect_db.php';
 
 //shoes table
 try {
-    $sql = "CREATE TABLE shoes (
+    $sql = $database->queryNotExecuted("CREATE TABLE shoes (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(200) NOT NULL,
         category VARCHAR(100) NOT NULL,
@@ -14,9 +13,9 @@ try {
         sold INT UNSIGNED NOT NULL,
         imageurl  VARCHAR(500) NOT NULL
         
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>shoes created successfully";
     }
@@ -25,13 +24,13 @@ try {
 }
 // categories table
 try {
-    $sql = "CREATE TABLE categories (
+    $sql = $database->queryNotExecuted("CREATE TABLE categories (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>categories created successfully";
     } else echo "<br>failed to create categories";
@@ -41,7 +40,7 @@ try {
 
 // users table
 try {
-    $sql = "CREATE TABLE users (
+    $sql = $database->queryNotExecuted("CREATE TABLE users (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL ,
@@ -52,9 +51,9 @@ try {
         role VARCHAR(15) DEFAULT 'normal',
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE (phoneNumber, email)
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>users tables created successfully";
     } else echo "<br>failed to create users";
@@ -64,7 +63,7 @@ try {
 
 // cartitem table
 try {
-    $sql = "CREATE TABLE cartItems (
+    $sql = $database->queryNotExecuted("CREATE TABLE cartItems (
        
         userId INT(6) UNSIGNED,
         shoeId INT(6) UNSIGNED,
@@ -73,9 +72,9 @@ try {
         CONSTRAINT FK_cartItems_users foreign key (userId) references users(id) on delete cascade,
         CONSTRAINT FK_cartItems_shoes foreign key (shoeId) references shoes(id) on delete cascade,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>cartItem tables created successfully";
     } else echo "<br>failed to create cartItem";
@@ -85,7 +84,7 @@ try {
 
 
 try {
-    $sql = "CREATE TABLE bills (
+    $sql = $database->queryNotExecuted("CREATE TABLE bills (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         userId INT(6) UNSIGNED NOT NULl,
         userName  VARCHAR(100) NOT NULL,
@@ -99,9 +98,9 @@ try {
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>bills tables created successfully";
     } else echo "<br>failed to create bills";
@@ -110,7 +109,7 @@ try {
 }
 
 try {
-    $sql = "CREATE TABLE billItems (
+    $sql = $database->queryNotExecuted("CREATE TABLE billItems (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         billId INT(6) unsigned not null,
         shoeId INT(6) unsigned NOT NULL,
@@ -119,9 +118,9 @@ try {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         CONSTRAINT FK_billItems_bills foreign key (billId) references bills(id) on delete cascade,
         CONSTRAINT FK_billItems_shoes foreign key (shoeId) references shoes(id) 
-        );";
+        );");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>billitems tables created successfully";
     } else echo "<br>failed to create billItems";
@@ -131,9 +130,9 @@ try {
 
 
 try {
-    $sql = "INSERT INTO `users` (`id`, `name`, `email`, `phoneNumber`, `address`, `password`, `avatar`, `role`) VALUES (NULL, 'admin', 'admin@gmail.com', '0000000000', 'Database', '12345678', NULL, 'admin')";
+    $sql = $database->queryNotExecuted("INSERT INTO `users` (`id`, `name`, `email`, `phoneNumber`, `address`, `password`, `avatar`, `role`) VALUES (NULL, 'admin', 'admin@gmail.com', '0000000000', 'Database', '12345678', NULL, 'admin') ;");
 
-    if ($conn->query($sql) === TRUE) {
+    if ($sql->execute() === TRUE) {
 
         echo "<br>Admin account created!";
     } else echo "<br>failed to insert admin";

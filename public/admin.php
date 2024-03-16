@@ -13,7 +13,7 @@ use Cloudinary\Configuration\Configuration;
 
 if (!isset($_SESSION['logined']) || (isset($_SESSION['logined']) && $_SESSION['logined']->role != 'admin')) {
     unset($_SESSION['logined']);
-    header('location: /pages/login.php');
+    header('location: login.php');
     exit();
 }
 

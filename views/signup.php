@@ -24,7 +24,7 @@
                     if ($_SESSION['sign_up'] == true) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
                         Đăng ký thành công!
-                        <a href='/pages/login.php' class='text-success text-decoration-underline'> Đến trang đăng nhập</a>
+                        <a href='/login.php' class='text-success text-decoration-underline'> Đến trang đăng nhập</a>
                      </div>";
                     } else {
                         echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>

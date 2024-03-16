@@ -23,16 +23,16 @@ class Bill
     public $updatedAt;
     function __construct($row)
     {
-        $this->id = isset($row['id']) ? intval(trim($row['id'])) : '';
-        $this->userId = isset($row['userId']) ? htmlspecialchars(trim($row['userId'])) : '';
-        $this->userName = isset($row['userName']) ? htmlspecialchars(trim($row['userName'])) : '';
-        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(trim($row['phoneNumber'])) : '';
+        $this->id = isset($row['id']) ? intval(Utility::standardizeString($row['id'])) : '';
+        $this->userId = isset($row['userId']) ? htmlspecialchars(Utility::standardizeString($row['userId'])) : '';
+        $this->userName = isset($row['userName']) ? htmlspecialchars(Utility::standardizeString($row['userName'], 'name')) : '';
+        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(Utility::standardizeString($row['phoneNumber'])) : '';
         $this->address = isset($row['address']) ? htmlspecialchars(trim($row['address'])) : '';
-        $this->discount = isset($row['discount']) ? intval(htmlspecialchars($row['discount'])) : 0;
-        $this->status = isset($row['status']) ? htmlspecialchars(trim($row['status'])) : 0;
-        $this->total = isset($row['total']) ? htmlspecialchars(trim($row['total'])) : 0;
-        $this->createdAt = isset($row['createdAt']) ? htmlspecialchars(trim($row['createdAt'])) : 0;
-        $this->updatedAt = isset($row['updatedAt']) ? htmlspecialchars(trim($row['updatedAt'])) : 0;
+        $this->discount = isset($row['discount']) ? intval(htmlspecialchars(Utility::standardizeString($row['discount']))) : 0;
+        $this->status = isset($row['status']) ? htmlspecialchars(Utility::standardizeString($row['status'])) : 0;
+        $this->total = isset($row['total']) ? htmlspecialchars(Utility::standardizeString($row['total'])) : 0;
+        $this->createdAt = isset($row['createdAt']) ? htmlspecialchars(Utility::standardizeString($row['createdAt'])) : 0;
+        $this->updatedAt = isset($row['updatedAt']) ? htmlspecialchars(Utility::standardizeString($row['updatedAt'])) : 0;
     }
     public static function getAll()
     {
@@ -84,7 +84,12 @@ class Bill
     {
         $database = new DatabaseConnector();
         $sql = $database->queryNotExecuted('UPDATE bills SET status = ? WHERE id = ?', [$status, $id]);
-        return $sql->execute();
+        try {
+            return $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
     public static function cancel($id)
     {
@@ -104,7 +109,12 @@ class Bill
         $database = new DatabaseConnector();
 
         $sql = $database->queryNotExecuted("delete from bills where id = ?", [$id]);
-        return $sql->execute();
+        try {
+            return $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
     public static function create($userId, $userName, $phoneNumber, $address, $total, $mixList)
     {

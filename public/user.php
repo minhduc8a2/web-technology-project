@@ -11,7 +11,7 @@ $categoryList = Category::getAll();
 
 
 if (!isset($_SESSION['logined'])) {
-    header('location: /pages/login.php');
+    header('location: /login.php');
 }
 
 User::updateUserForUser();

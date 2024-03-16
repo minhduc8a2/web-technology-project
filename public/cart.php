@@ -12,8 +12,30 @@ session_start();
 if (!isset($_SESSION['logined'])) {
     header('location: /login.php');
 }
-CartItem::updateQuantity();
-CartItem::delete();
+// delete cart item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"]) && isset($_POST["id"]) && !empty($_POST["id"])) {
+
+    $shoeId = $_POST["id"];
+    $userId = $_SESSION['logined']->id;
+    if (CartItem::delete($shoeId, $userId)) {
+        $_SESSION["delete_shoe"] = true;
+    } else {
+        $_SESSION["delete_shoe"] = false;
+    }
+}
+// end of delete cart item
+// update quantity of cart item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["changeQuantity"]) &&  isset($_POST["id"]) && !empty($_POST["id"]) && isset($_POST["quantity"]) && !empty($_POST["quantity"])) {
+    $input_quantity = $_POST["quantity"];
+    $shoeId = $_POST["id"];
+    $userId = $_SESSION['logined']->id;
+    if (CartItem::updateQuantity($input_quantity,  $shoeId, $userId)) {
+        $_SESSION["update_quantity"] = true;
+    } else {
+        $_SESSION["update_quantity"] = false;
+    }
+}
+// end of update quantity of cart item
 
 $categoryList = Category::getAll();
 $userId = $_SESSION['logined']->id;

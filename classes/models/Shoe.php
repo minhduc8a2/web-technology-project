@@ -21,14 +21,14 @@ class Shoe
     public $sold;
     function __construct($row)
     {
-        $this->id = isset($row['id']) ?  intval(trim($row['id'])) : '';
+        $this->id = isset($row['id']) ?  intval(Utility::standardizeString($row['id'])) : '';
         $this->name = isset($row['name']) ? htmlspecialchars(trim($row['name'])) : '';
         $this->category = isset($row['category']) ? htmlspecialchars(trim($row['category'])) : '';
         $this->description = isset($row['description']) ? htmlspecialchars(trim($row['description'])) : '';
-        $this->imageurl = isset($row['imageurl']) ? htmlspecialchars(trim($row['imageurl'])) : '';
-        $this->price = isset($row['price']) ? intval(htmlspecialchars($row['price'])) : 0;
-        $this->instock = isset($row['instock']) ? htmlspecialchars(trim($row['instock'])) : 0;
-        $this->sold = isset($row['sold']) ? htmlspecialchars(trim($row['sold'])) : 0;
+        $this->imageurl = isset($row['imageurl']) ? htmlspecialchars(Utility::standardizeString($row['imageurl'])) : '';
+        $this->price = isset($row['price']) ? intval(htmlspecialchars(Utility::standardizeString($row['price']))) : 0;
+        $this->instock = isset($row['instock']) ? htmlspecialchars(Utility::standardizeString($row['instock'])) : 0;
+        $this->sold = isset($row['sold']) ? htmlspecialchars(Utility::standardizeString($row['sold'])) : 0;
     }
     public static function getAll(int|bool $limit = false, int|bool $offset = false)
     {
@@ -61,19 +61,28 @@ class Shoe
         $database = new DatabaseConnector();
         $sql = $database->queryNotExecuted("INSERT INTO shoes (name, description,category, price,sold, instock,imageurl)
         VALUES (?,?,?,?,?,?,?) ;", [$newShoe->name, $newShoe->description, $newShoe->category, $newShoe->price, $newShoe->sold, $newShoe->instock, $newShoe->imageurl]);
-
-        if ($sql->execute()) {
-            return true;
+        try {
+            if ($sql->execute()) {
+                return true;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
+
         return false;
     }
     public static function update($shoe)
     {
         $database = new DatabaseConnector();
         $sql = $database->queryNotExecuted("UPDATE shoes SET name=?, description=?,  price=?, category=?, instock = ?, sold = ?, imageurl = ? WHERE id=?;", [$shoe->name, $shoe->description, $shoe->price, $shoe->category, $shoe->instock, $shoe->sold, $shoe->imageurl, $shoe->id]);
-        if ($sql->execute()) {
-            return true;
+        try {
+            if ($sql->execute()) {
+                return true;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
+
         return false;
     }
     public static function search(string $searchTerm, int $limit = 12, int $offset = 0)

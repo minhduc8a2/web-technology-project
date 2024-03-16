@@ -11,7 +11,7 @@ $categoryList = Category::getAll();
 // configure from here
 if (!isset($_SESSION['logined'])) {
 
-    header('location: /pages/login.php');
+    header('location: /login.php');
 }
 $userId = $_SESSION['logined']->id;
 

@@ -15,7 +15,7 @@ Configuration::instance('cloudinary://698573158872163:pP_wRfiJ4vOcPPuJ2985ULdZXp
 
 if (!isset($_SESSION['logined']) || (isset($_SESSION['logined']) && $_SESSION['logined']->role != 'admin')) {
     unset($_SESSION['logined']);
-    header('location: /pages/login.php');
+    header('location: login.php');
     exit();
 }
 

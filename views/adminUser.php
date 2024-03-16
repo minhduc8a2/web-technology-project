@@ -35,7 +35,7 @@
                     showMessage("Cập nhật thành công!");
                 } else {
 
-                    showMessage("Cập nhật thất bại, vui lòng kiểm tra lại thông tin người dùng hoặc thử lại sau.",'danger');
+                    showMessage("Cập nhật thất bại, vui lòng kiểm tra lại thông tin người dùng hoặc thử lại sau.", 'danger');
                 }
                 unset($_SESSION['update_user']);
             }
@@ -44,7 +44,7 @@
                     showMessage("Tạo người dùng thành công!");
                 } else {
 
-                    showMessage("Tạo người dùng thất bại, vui lòng kiểm tra lại thông tin người dùng hoặc thử lại sau.",'danger');
+                    showMessage("Tạo người dùng thất bại, vui lòng kiểm tra lại thông tin người dùng hoặc thử lại sau.", 'danger');
                 }
                 unset($_SESSION['create_user']);
             }
@@ -54,7 +54,7 @@
                     showMessage("Xóa người dùng thành công!");
                 } else {
 
-                    showMessage("Xóa người dùng thất bại, vui lòng thử lại sau.",'danger');
+                    showMessage("Xóa người dùng thất bại, vui lòng thử lại sau.", 'danger');
                 }
                 unset($_SESSION['delete_user']);
             }
@@ -184,7 +184,7 @@
                                     <div class='border-end pe-4'>
                                         <p>Ảnh hiện tại</p>
                                         ";
-                    if ($avatar == 'null') {
+                    if (!$avatar) {
                         echo "
                                         <img src='../assets/images/user.png' class='rounded-2' alt='preview' style='width:200px;'>";
                     } else {

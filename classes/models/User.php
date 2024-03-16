@@ -24,14 +24,14 @@ class User
 
     function __construct($row)
     {
-        $this->id = isset($row['id']) ? intval($row['id']) : '';
-        $this->name = isset($row['name']) ? htmlspecialchars(trim($row['name'])) : '';
-        $this->email = isset($row['email']) ? htmlspecialchars(trim($row['email'])) : '';
-        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(trim($row['phoneNumber'])) : '';
+        $this->id = isset($row['id']) ? $row['id'] : '';
+        $this->name = isset($row['name']) ? htmlspecialchars(Utility::standardizeString($row['name'],'name')) : '';
+        $this->email = isset($row['email']) ? htmlspecialchars(Utility::standardizeString($row['email'])) : '';
+        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(Utility::standardizeString($row['phoneNumber'])) : '';
         $this->address = isset($row['address']) ? htmlspecialchars(trim($row['address'])) : '';
-        $this->avatar = isset($row['avatar']) ? htmlspecialchars(trim($row['avatar'])) : '';
-        $this->role = isset($row['role']) ? htmlspecialchars(trim($row['role'])) : '';
-        $this->password = isset($row['password']) ? htmlspecialchars(trim($row['password'])) : '';
+        $this->avatar = isset($row['avatar']) ? htmlspecialchars(Utility::standardizeString($row['avatar'])) : '';
+        $this->role = isset($row['role']) ? htmlspecialchars(Utility::standardizeString($row['role'])) : '';
+        $this->password = isset($row['password']) ? htmlspecialchars(Utility::standardizeString($row['password'])) : '';
     }
 
     public static function getAll(int|bool $limit = false, int|bool $offset = false)
@@ -73,14 +73,24 @@ class User
             VALUES (?,?,?,?,?,?,?);', [$user->name, $user->email, $user->phoneNumber, $user->address, $user->password, $user->role, $user->avatar]);
         }
 
-        return $sql->execute();
+        try {
+            return $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
     public static function update(User $user)
     {
         $database = new DatabaseConnector();
 
         $sql = $database->queryNotExecuted("UPDATE users SET name=?,role=?, email=?, phoneNumber=?, avatar=?,  address=?, password=? WHERE id=? ;", [$user->name, $user->role, $user->email, $user->phoneNumber, $user->avatar, $user->address, $user->password, $user->id]);
-        return $sql->execute();
+        try {
+            return $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
     public static function signUp()
     {
@@ -116,6 +126,7 @@ class User
                     array_push($errorList, "Vui lòng đúng định dạng số điện thoại.");
                 }
             }
+
             if (empty($_POST['address'])) {
                 array_push($errorList, "Vui lòng nhập địa chỉ.");
             } else {
@@ -137,11 +148,11 @@ class User
             if (count($errorList) == 0) {
                 $database = new DatabaseConnector();
 
-                $name = $_POST['name'];
-                $email = $_POST['email'];
-                $phoneNumber = $_POST['phoneNumber'];
-                $address = $_POST['address'];
-                $password =  $_POST['password'];
+                $name = Utility::standardizeString($_POST['name'], 'name');
+                $email = Utility::standardizeString($_POST['email']);
+                $phoneNumber = Utility::standardizeString($_POST['phoneNumber']);
+                $address = trim($_POST['address']);
+                $password =  Utility::standardizeString($_POST['password']);
 
                 try {
                     $sql = $database->queryExecuted("select * from users where phoneNumber= ? or email= ? ;", [$phoneNumber, $email]);
@@ -155,24 +166,27 @@ class User
                 }
                 if (isset($phoneExists) && !$phoneExists) {
                     if (isset($_FILES['avatar']) && empty($_FILES['avatar']['error'])) {
-                        echo $_FILES['imageFile']['error'];
-                        $file = $_FILES['avatar'];
-                        $respone = (new UploadApi())->upload($file['tmp_name']);
-                        $avatar = $respone['secure_url'];
+
+                        ['imageurl' => $avatar, 'imageId' => $avatarId] = Utility::uploadImage($_FILES['avatar']);
                     }
-
-
-                    $sql = $database->queryExecuted("INSERT INTO users (name,email,phoneNumber,address,password) 
-                    VALUES (?,?,?,?,?);", [$name, $email, $phoneNumber, $address, $password]);
                     if (isset($avatar) && !empty($avatar)) {
-                        $sql = $database->queryExecuted("INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
+                        $sql = $database->queryNotExecuted("INSERT INTO users (name,email,phoneNumber,address,password,avatar) 
                         VALUES (?,?,?,?,?,?);", [$name, $email, $phoneNumber, $address, $password, $avatar]);
-                    }
-                    if ($sql->execute() === TRUE) {
-
-                        $_SESSION['sign_up'] = true;
                     } else {
+                        $sql = $database->queryNotExecuted("INSERT INTO users (name,email,phoneNumber,address,password) 
+                        VALUES (?,?,?,?,?);", [$name, $email, $phoneNumber, $address, $password]);
+                    }
+                    try {
+                        if ($sql->execute() == TRUE) {
+
+                            $_SESSION['sign_up'] = true;
+                        } else {
+                            $_SESSION['sign_up'] = false;
+                            if (isset($avatarId)) Utility::deleteImageOnCloudinary($avatarId);
+                        }
+                    } catch (\Throwable $th) {
                         $_SESSION['sign_up'] = false;
+                        if (isset($avatarId)) Utility::deleteImageOnCloudinary($avatarId);
                     }
                 }
             }
@@ -210,8 +224,8 @@ class User
 
             if (count($errorList) == 0) {
 
-                $email = $_POST['email'];
-                $password =  $_POST['password'];
+                $email = Utility::standardizeString($_POST['email']);
+                $password =  Utility::standardizeString($_POST['password']);
 
 
                 try {
@@ -307,13 +321,13 @@ class User
             // if authentic
             if (count($errorList) == 0) {
                 $id = $_POST['id'];
-                $name = trim($_POST['name']);
-                $email = trim($_POST['email']);
-                $phoneNumber = trim($_POST['phoneNumber']);
-                $address = trim($_POST['address']);
+                $name = Utility::standardizeString($_POST['name']);
+                $email = Utility::standardizeString($_POST['email']);
+                $phoneNumber = Utility::standardizeString($_POST['phoneNumber']);
+                $address = Utility::standardizeString($_POST['address']);
                 $avatar = $_POST['avatar'];
-                $password =  trim($_POST['password']);
-                $newPassword =  trim($_POST['newPassword']);
+                $password =  Utility::standardizeString($_POST['password']);
+                $newPassword =  Utility::standardizeString($_POST['newPassword']);
 
                 $sqlCheck = $database->queryExecuted("select * from users where ( phoneNumber= ? and id!= ? ) or ( email= ? and id!= ? );", [$phoneNumber, $id, $email, $id]);
 
@@ -333,12 +347,12 @@ class User
                 if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error']) &&  !$phoneExists) {
 
                     $hasFile = true;
-                    if ($avatar != 'null') {
+                    if ($avatar) {
                         $temp  = explode('/', $avatar);
                         $imageId = $temp[count($temp) - 2] . '/' . explode('.', $temp[count($temp) - 1])[0];
                     }
                     try {
-                        if ($avatar != 'null') {
+                        if ($avatar) {
                             (new UploadApi())->destroy($imageId);
                         }
                         $file = $_FILES['imageFile'];

@@ -16,7 +16,7 @@ class Category
     function __construct($row)
     {
         $this->id = intval($row['id']);
-        $this->name = htmlspecialchars($row['name']);
+        $this->name = htmlspecialchars(trim($row['name']));
     }
     public static function getAll()
     {

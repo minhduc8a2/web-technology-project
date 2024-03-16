@@ -24,28 +24,34 @@ class DatabaseConnector
     }
     public function queryExecuted($query, $params = [])
     {
-        $sql = $this->conn->prepare($query);
-        $paramsLength = count($params);
-        for ($i = 0; $i < $paramsLength; $i++) {
-            if (gettype($params[$i]) == 'integer') {
-                $sql->bindParam($i + 1, $params[$i], PDO::PARAM_INT);
-            } else  if (gettype($params[$i]) == 'string') {
-                $sql->bindParam($i + 1, $params[$i], PDO::PARAM_STR);
-            } else  if (gettype($params[$i]) == 'boolean') {
-                $sql->bindParam($i + 1, $params[$i], PDO::PARAM_BOOL);
+        try {
+            $sql = $this->conn->prepare($query);
+            $paramsLength = count($params);
+            for ($i = 0; $i < $paramsLength; $i++) {
+                if (gettype($params[$i]) == 'integer') {
+                    $sql->bindParam($i + 1, $params[$i], PDO::PARAM_INT);
+                } else  if (gettype($params[$i]) == 'string') {
+                    $sql->bindParam($i + 1, $params[$i], PDO::PARAM_STR);
+                } else  if (gettype($params[$i]) == 'boolean') {
+                    $sql->bindParam($i + 1, $params[$i], PDO::PARAM_BOOL);
+                }
             }
+            $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
         }
-        $sql->execute();
         return $sql;
     }
 
     public function queryNotExecuted($query, $params = [])
     {
+
         $sql = $this->conn->prepare($query);
         $paramsLength = count($params);
         for ($i = 0; $i < $paramsLength; $i++) {
             $sql->bindParam($i + 1, $params[$i]);
         }
+
         return $sql;
     }
 
@@ -84,7 +90,12 @@ class DatabaseConnector
     {
         $query = "DELETE FROM " . $table . " WHERE id=? ;";
         $sql =  $this->queryNotExecuted($query, [$id]);
-        return $sql->execute();
+        try {
+            return $sql->execute();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
 
     public  function search(string $select, array $fields, string $searchTerm, int $limit = 12, int $offset = 0)
