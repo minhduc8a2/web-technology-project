@@ -13,23 +13,74 @@ use \PDO;
 
 class User
 {
-    public int $id;
-    public string $name;
-    public string $email;
-    public string $phoneNumber;
-    public string $address;
-    public string $avatar;
-    public string $role;
-    public const DEFAULT_AVATAR = "https://res.cloudinary.com/dqqetbr1m/image/upload/v1704084419/adidas_php/gwvuxp7hqmdz3jnjkpgz.png";
+    public  $id;
+    public $name;
+    public $email;
+    public $phoneNumber;
+    public $address;
+    public $avatar;
+    public $role;
+    public $password;
+
     function __construct($row)
     {
-        $this->id = intval($row['id']);
-        $this->name = htmlspecialchars($row['name']);
-        $this->email = htmlspecialchars($row['email']);
-        $this->phoneNumber = htmlspecialchars($row['phoneNumber']);
-        $this->address = htmlspecialchars($row['address']);
-        $this->avatar = htmlspecialchars($row['avatar']);
-        $this->role = htmlspecialchars($row['role']);
+        $this->id = isset($row['id']) ? intval($row['id']) : '';
+        $this->name = isset($row['name']) ? htmlspecialchars(trim($row['name'])) : '';
+        $this->email = isset($row['email']) ? htmlspecialchars(trim($row['email'])) : '';
+        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(trim($row['phoneNumber'])) : '';
+        $this->address = isset($row['address']) ? htmlspecialchars(trim($row['address'])) : '';
+        $this->avatar = isset($row['avatar']) ? htmlspecialchars(trim($row['avatar'])) : '';
+        $this->role = isset($row['role']) ? htmlspecialchars(trim($row['role'])) : '';
+        $this->password = isset($row['password']) ? htmlspecialchars(trim($row['password'])) : '';
+    }
+
+    public static function getAll(int|bool $limit = false, int|bool $offset = false)
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->getQuery('select* from users', false, [], $limit, $offset);
+        $tempList = [];
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($tempList, new User($row));
+        }
+        return $tempList;
+    }
+    public static function getCount(string|false $where = false, array $whereParams = [])
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->getQuery('SELECT COUNT(*) as count from users', $where, $whereParams);
+        if ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            return $row['count'];
+        } else return 0;
+    }
+    public static function deleteOne(int $id)
+    {
+        $database = new DatabaseConnector();
+        return $database->deleteOne('users', $id);
+    }
+    public static function checkExist(string|false $where = false, array $whereParams = [])
+    {
+        return User::getCount($where, $whereParams) != 0;
+    }
+
+    public static function create(User $user, bool $haveAvatar)
+    {
+        $database = new DatabaseConnector();
+        if (!$haveAvatar) {
+            $sql = $database->queryNotExecuted('INSERT INTO users (name,email,phoneNumber,address,password,role) 
+            VALUES (?,?,?,?,?,?);', [$user->name, $user->email, $user->phoneNumber, $user->address, $user->password, $user->role]);
+        } else {
+            $sql = $database->queryNotExecuted('INSERT INTO users (name,email,phoneNumber,address,password,role,avatar) 
+            VALUES (?,?,?,?,?,?,?);', [$user->name, $user->email, $user->phoneNumber, $user->address, $user->password, $user->role, $user->avatar]);
+        }
+
+        return $sql->execute();
+    }
+    public static function update(User $user)
+    {
+        $database = new DatabaseConnector();
+
+        $sql = $database->queryNotExecuted("UPDATE users SET name=?,role=?, email=?, phoneNumber=?, avatar=?,  address=?, password=? WHERE id=? ;", [$user->name, $user->role, $user->email, $user->phoneNumber, $user->avatar, $user->address, $user->password, $user->id]);
+        return $sql->execute();
     }
     public static function signUp()
     {
@@ -287,7 +338,7 @@ class User
                         $imageId = $temp[count($temp) - 2] . '/' . explode('.', $temp[count($temp) - 1])[0];
                     }
                     try {
-                        if ($avatar != 'null' && $avatar != User::DEFAULT_AVATAR) {
+                        if ($avatar != 'null') {
                             (new UploadApi())->destroy($imageId);
                         }
                         $file = $_FILES['imageFile'];

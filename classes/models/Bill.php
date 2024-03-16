@@ -23,16 +23,16 @@ class Bill
     public $updatedAt;
     function __construct($row)
     {
-        $this->id =  intval($row['id']);
-        $this->userId = isset($row['userId']) ? htmlspecialchars($row['userId']) : '';
-        $this->userName = isset($row['userName']) ? htmlspecialchars($row['userName']) : '';
-        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars($row['phoneNumber']) : '';
-        $this->address = isset($row['address']) ? htmlspecialchars($row['address']) : '';
+        $this->id = isset($row['id']) ? intval(trim($row['id'])) : '';
+        $this->userId = isset($row['userId']) ? htmlspecialchars(trim($row['userId'])) : '';
+        $this->userName = isset($row['userName']) ? htmlspecialchars(trim($row['userName'])) : '';
+        $this->phoneNumber = isset($row['phoneNumber']) ? htmlspecialchars(trim($row['phoneNumber'])) : '';
+        $this->address = isset($row['address']) ? htmlspecialchars(trim($row['address'])) : '';
         $this->discount = isset($row['discount']) ? intval(htmlspecialchars($row['discount'])) : 0;
-        $this->status = isset($row['status']) ? htmlspecialchars($row['status']) : 0;
-        $this->total = isset($row['total']) ? htmlspecialchars($row['total']) : 0;
-        $this->createdAt = isset($row['createdAt']) ? htmlspecialchars($row['createdAt']) : 0;
-        $this->updatedAt = isset($row['updatedAt']) ? htmlspecialchars($row['updatedAt']) : 0;
+        $this->status = isset($row['status']) ? htmlspecialchars(trim($row['status'])) : 0;
+        $this->total = isset($row['total']) ? htmlspecialchars(trim($row['total'])) : 0;
+        $this->createdAt = isset($row['createdAt']) ? htmlspecialchars(trim($row['createdAt'])) : 0;
+        $this->updatedAt = isset($row['updatedAt']) ? htmlspecialchars(trim($row['updatedAt'])) : 0;
     }
     public static function getAll()
     {
@@ -65,6 +65,11 @@ class Bill
         }
         return NULL;
     }
+    public static function deleteOne(int $id)
+    {
+        $database = new DatabaseConnector();
+        return $database->deleteOne('bills', $id);
+    }
     public static function getOneForUser(int $id, int $userId): Bill|NULL
     {
         $database = new DatabaseConnector();
@@ -86,7 +91,14 @@ class Bill
 
         Bill::changeStatus($id, 'cancelled');
     }
-
+    public static function getCount(string|false $where = false, array $whereParams = [])
+    {
+        $database = new DatabaseConnector();
+        $sql = $database->getQuery('SELECT COUNT(*) as count from bills', $where, $whereParams);
+        if ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            return $row['count'];
+        } else return 0;
+    }
     public static function delete($id)
     {
         $database = new DatabaseConnector();

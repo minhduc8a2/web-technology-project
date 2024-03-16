@@ -1,22 +1,8 @@
 <?php
 require dirname(__DIR__, 1) . '/vendor/autoload.php';
+include dirname(__DIR__) . '/components/message.php';
 
 use Classes\Others\Utility as Utility;
-
-
-if (isset($_SESSION["update_quantity"])) {
-    if ($_SESSION["update_quantity"] == true) {
-        echo "<script>alert('Cập nhật số lượng thành công')</script>";
-    } else  echo "<script>alert('Cập nhật số lượng thất bại, vui lòng thử lại sau!')</script>";
-    $_SESSION["update_quantity"] = null;
-}
-if (isset($_SESSION["delete_shoe"])) {
-    if ($_SESSION["delete_shoe"] == true) {
-        echo "<script>alert('Xóa sản phẩm thành công!')</script>";
-    } else  echo "<script>alert('Xóa sản phẩm thất bại, vui lòng thử lại sau!')</script>";
-    $_SESSION["delete_shoe"] = null;
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -40,6 +26,21 @@ if (isset($_SESSION["delete_shoe"])) {
         <div class="row gx-lg-5 gy-5 mt-new-section">
             <div class="col-12 col-lg-8">
                 <h2>Danh sách sản phẩm</h2>
+                <?php
+                if (isset($_SESSION["update_quantity"])) {
+                    if ($_SESSION["update_quantity"] == true) {
+                        showMessage('Cập nhật số lượng thành công');
+                    } else  showMessage('Cập nhật số lượng thất bại, vui lòng thử lại sau!', 'danger');
+                    $_SESSION["update_quantity"] = null;
+                }
+                if (isset($_SESSION["delete_shoe"])) {
+                    if ($_SESSION["delete_shoe"] == true) {
+                        showMessage('Xóa sản phẩm thành công!');
+                    } else  showMessage('Xóa sản phẩm thất bại, vui lòng thử lại sau!', 'danger');
+                    $_SESSION["delete_shoe"] = null;
+                }
+
+                ?>
                 <ul class="mt-5 p-0 ">
                     <?php
                     $total = 0;
@@ -83,7 +84,7 @@ if (isset($_SESSION["delete_shoe"])) {
                                      <form action='/cart.php' method='post' class='m-0 d-flex align-items-center'>
                                         <input type='hidden' name='id' value='$id'/>
                                         <input type='hidden' name='delete' value='true'/>
-                                        <button class='border-0 bg-transparent text-danger fs-5' type='submit'><i class='fa-solid fa-trash-can'></i></button>
+                                        <button class='border-0 bg-transparent text-danger fs-5' type='submit' id='del-btn'><i class='fa-solid fa-trash-can'></i></button>
                                      </form>   
                                         
                                     </div>
@@ -138,7 +139,7 @@ if (isset($_SESSION["delete_shoe"])) {
                 if (element.checked) shoeList.push(element.value);
 
             }
-            
+
             if (shoeList.length > 0) {
                 $.ajax({
                     type: "POST",
@@ -156,6 +157,13 @@ if (isset($_SESSION["delete_shoe"])) {
 
 
         }
+        const delBtn = $('#del-btn');
+        delBtn.on('click', function(e) {
+            e.preventDefault();
+            if (confirm('Bạn có chắc là muốn xóa hóa đơn này?')) {
+                delBtn.parent().submit();
+            }
+        })
     </script>
 </body>
 

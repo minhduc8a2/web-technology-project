@@ -22,7 +22,7 @@ $categoryName = Category::getOne($categoryId)?->name;
 $limit = $_GET['limit'] ?? 12;
 $page = $_GET['page'] ?? 1;
 $offset = $page ? ($page - 1) * $limit : 0;
-$totalShoes = Shoe::getShoesCount('where category = ?', [$categoryName]);
+$totalShoes = Shoe::getCount('where category = ?', [$categoryName]);
 $paginator = new Paginator($limit, $totalShoes, $page);
 $pages = $paginator->getPages(length: 3);
 

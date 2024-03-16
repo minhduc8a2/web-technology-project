@@ -101,7 +101,7 @@
                     <div class="mb-3">
                         <label for="inputAvatar" class="form-label">Avatar</label>
                         <div class="input-group mb-4">
-                            <input type="file" class="form-control" id="inputAvatar" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="avatar">
+                            <input type="file" class="form-control" id="inputAvatar" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="avatar" accept='image/*'>
 
                         </div>
                     </div>

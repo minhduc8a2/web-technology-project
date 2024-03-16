@@ -11,6 +11,5 @@ session_start();
 $categoryList = Category::getAll();
 $shoeId = $_GET['id'];
 $shoe = Shoe::getOne($shoeId);
-$shoe->price = Utility::moneyFormat($shoe->price);
 CartItem::create();
-Utility::renderView('product', array_merge($shoe->getArrayForExtraction(), ["categoryList" => $categoryList]));
+Utility::renderView('product', ['shoe' => $shoe, "categoryList" => $categoryList]);

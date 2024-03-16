@@ -48,7 +48,7 @@ try {
         phoneNumber VARCHAR(100) NOT NULL,
         address VARCHAR(100) NOT NULL,
         password VARCHAR(200) NOT NULL,
-        avatar VARCHAR(200) DEFAULT 'https://res.cloudinary.com/dqqetbr1m/image/upload/v1704084419/adidas_php/gwvuxp7hqmdz3jnjkpgz.png',
+        avatar VARCHAR(200) ,
         role VARCHAR(15) DEFAULT 'normal',
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE (phoneNumber, email)

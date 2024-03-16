@@ -16,7 +16,7 @@
     ?>
     <div class="container mt-new-page">
         <div class="row gx-lg-5 gy-5">
-            <div class="col-lg-7 col-12 d-flex d-lg-block justify-content-center align-items-center"><img src=<?= $imageurl ?> alt=<?= $name ?> class="w-75 rounded-5"> </div>
+            <div class="col-lg-7 col-12 d-flex d-lg-block justify-content-center align-items-center"><img src=<?= $shoe->imageurl ?> alt=<?= $shoe->name ?> class="w-75 rounded-5"> </div>
             <div class="col-lg-5 col-12 border-start px-4">
                 <?php
 
@@ -37,11 +37,11 @@
 
 
                 ?>
-                <p class="text-secondary fs-5 fw-semi-bold mb-0"><?= $category ?></p>
-                <p class="fs-2 fw-semibold mb-2"><?= $name ?></p>
-                <p class="fs-5 text-danger fw-semibold "><?= $price ?> <span class="text-decoration-underline">đ</span></p>
+                <p class="text-secondary fs-5 fw-semi-bold mb-0"><?= $shoe->category ?></p>
+                <p class="fs-2 fw-semibold mb-2"><?= $shoe->name ?></p>
+                <p class="fs-5 text-danger fw-semibold "><?= $shoe->getFormatPrice() ?> <span class="text-decoration-underline">đ</span></p>
                 <p class="fs-6 fw-semibold ">Sản phẩm này không nằm trong các chương trình giảm giá và ưu đãi khuyến mãi.</p>
-                <p class="fs-5 fw-semibold mb-3">Sẵn có: <?= $instock ?> </p>
+                <p class="fs-5 fw-semibold mb-3">Sẵn có: <?= $shoe->instock ?> </p>
                 <div class="accordion mb-5 " id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
@@ -52,7 +52,7 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <p> <span class="text-uppercase fw-bold fs-5"><?php
-                                                                                $sentence = explode('.', $description);
+                                                                                $sentence = explode('.', $shoe->description);
                                                                                 echo $sentence[0];
                                                                                 ?>.</span>
                                     <?php
@@ -67,8 +67,8 @@
                         </div>
                     </div>
                 </div>
-                <form action="/product.php?id=<?= $id ?>" method="post">
-                    <input type='hidden' name='id' value='<?= $id ?>' />
+                <form action="/product.php?id=<?= $shoe->id ?>" method="post">
+                    <input type='hidden' name='id' value='<?= $shoe->id ?>' />
 
                     <button class="btn btn-dark py-3 px-4">Thêm vào giỏ hàng</button>
                 </form>

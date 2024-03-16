@@ -1,43 +1,3 @@
-<?php
-
-
-
-
-
-
-
-
-if (isset($_SESSION['update_shoe'])) {
-    if ($_SESSION['update_shoe']['state'] == true) {
-        echo '<script>alert("Cập nhật thành công!")</script>';
-    } else {
-
-        echo '<script>alert("Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';;
-    }
-    unset($_SESSION['update_shoe']);
-}
-if (isset($_SESSION['create_shoe'])) {
-    if ($_SESSION['create_shoe'] == true) {
-        echo '<script>alert("Tạo sản phẩm thành công!")</script>';
-    } else {
-
-        echo '<script>alert("Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';
-    }
-    unset($_SESSION['create_shoe']);
-}
-
-if (isset($_SESSION['delete_shoe'])) {
-    if ($_SESSION['delete_shoe'] == true) {
-        echo '<script>alert("Xóa sản phẩm thành công!")</script>';
-    } else {
-
-        echo '<script>alert("Xóa sản phẩm thất bại, vui lòng thử lại sau.")</script>';
-    }
-    unset($_SESSION['delete_shoe']);
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,27 +17,48 @@ if (isset($_SESSION['delete_shoe'])) {
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/pages/admin.php">Quản lý sản phẩm</a>
+                <a class="nav-link active" aria-current="page" href="/admin.php">Quản lý sản phẩm</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/pages/adminUser.php">Quản lý người dùng</a>
+                <a class="nav-link" href="/adminUser.php">Quản lý người dùng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/pages/adminBill.php">Quản lý hóa đơn</a>
+                <a class="nav-link" href="/adminBill.php">Quản lý hóa đơn</a>
             </li>
         </ul>
         <main class="mt-5">
             <?php
-            if (isset($_SESSION['error_list'])) {
-                foreach ($_SESSION['error_list']['errorList'] as &$value) {
-                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        $value
-                       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                     </div>";
+            include dirname(__DIR__) . '/components/errorList.php';
+            include dirname(__DIR__) . '/components/message.php';
+
+            if (isset($_SESSION['update_shoe'])) {
+                if ($_SESSION['update_shoe']['state'] == true) {
+                    showMessage('Cập nhật thành công!');
+                } else {
+
+                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.','danger');;
                 }
-                unset($_SESSION['error_list']);
+                unset($_SESSION['update_shoe']);
+            }
+            if (isset($_SESSION['create_shoe'])) {
+                if ($_SESSION['create_shoe'] == true) {
+                    showMessage('Tạo sản phẩm thành công!');
+                } else {
+
+                    showMessage('Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.','danger');
+                }
+                unset($_SESSION['create_shoe']);
             }
 
+            if (isset($_SESSION['delete_shoe'])) {
+                if ($_SESSION['delete_shoe'] == true) {
+                    showMessage('Xóa sản phẩm thành công!');
+                } else {
+
+                    showMessage('Xóa sản phẩm thất bại, vui lòng thử lại sau.','danger');
+                }
+                unset($_SESSION['delete_shoe']);
+            }
             ?>
             <div class="accordion" id="accordionExample">
                 <div class='accordion-item'>
@@ -125,7 +106,7 @@ if (isset($_SESSION['delete_shoe'])) {
                                 <div class='mb-3'>
                                     <label class='form-label'>Ảnh sản phẩm</label>
                                     <div class='input-group mb-4'>
-                                        <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
+                                        <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile' accept='image/*'>
                                     </div>
                                 </div>
                                 <input type="hidden" name="create">
@@ -161,7 +142,7 @@ if (isset($_SESSION['delete_shoe'])) {
                                 <input type='hidden' name='delete' />
                                 <button class='border-0 bg-transparent text-danger fs-5' type='submit' id='del-btn'>Xóa sản phẩm <i class='fa-solid fa-trash-can'></i></button>
                             </form> 
-                            <form action='/services/shoes/update.php' method='post' class='p-lg-5 p-2 shadow rounded-4 mt-4' enctype='multipart/form-data'>
+                            <form action='/admin.php' method='post' class='p-lg-5 p-2 shadow rounded-4 mt-4' enctype='multipart/form-data'>
                                 <div class='mb-3'>
                                     <label class='form-label'>Tên giày</label>
                                     <input type='text' class='form-control' name='name' value=' $shoeName '>
@@ -195,6 +176,8 @@ if (isset($_SESSION['delete_shoe'])) {
                                 </div>  
                                 <input type='hidden' name='imageurl' value='$imageurl'/>
                                 <input type='hidden' name='id' value='$id'/>
+                                <input type='hidden' name='update' />
+
                                 <div class='d-flex gap-4 align-items-center my-4'>
                                     <div class='border-end pe-4'>
                                         <p>Ảnh hiện tại</p>
@@ -204,7 +187,7 @@ if (isset($_SESSION['delete_shoe'])) {
                                     <div class='mb-3'>
                                         <label class='form-label'>Chọn ảnh mới</label>
                                         <div class='input-group mb-4'>
-                                            <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile'>
+                                            <input type='file' class='form-control' aria-describedby='inputGroupFileAddon04' aria-label='Upload' name='imageFile' accept='image/*'>
                                         </div>
                                     </div>
                                 </div>
@@ -224,18 +207,18 @@ if (isset($_SESSION['delete_shoe'])) {
                 <ul class=" pagination ">
                     <li class="page-item<?= $paginator->getPrevPage() ?
                                             '' : ' disabled' ?>">
-                        <a role="button" href="/pages/admin.php?page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
+                        <a role="button" href="/admin.php?page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
                             <span>&laquo;</span>
                         </a>
                     </li>
                     <?php foreach ($pages as $page) : ?>
                         <li class="page-item<?= $paginator->currentPage === $page ?
-                                                ' active' : '' ?>"><a role="button" href="/pages/admin.php?page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
+                                                ' active' : '' ?>"><a role="button" href="/admin.php?page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
                         </li>
                     <?php endforeach ?>
                     <li class="page-item<?= $paginator->getNextPage() ?
                                             '' : ' disabled' ?>">
-                        <a role="button" href="/pages/admin.php?page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
+                        <a role="button" href="/admin.php?page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
                             <span>&raquo;</span>
                         </a>
                     </li>

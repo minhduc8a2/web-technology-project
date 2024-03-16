@@ -22,8 +22,8 @@ class CartItem
             }
             $userId = $_SESSION['logined']->id;
             $shoeId = $_POST["id"];
-
             $sql = $database->queryNotExecuted("call create_cartitem( ? , ? )", [$userId, $shoeId]);
+
             if ($sql->execute() == true) {
                 $_SESSION['add_to_cart'] = true;
             }

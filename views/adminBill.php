@@ -1,71 +1,3 @@
-<?php
-require_once dirname(__DIR__, 1) . '/services/connect_db.php';
-require_once dirname(__DIR__, 1) . '/services/utils.php';
-require_once dirname(__DIR__, 1) . '/services/bills/utils.php';
-require_once dirname(__DIR__, 1) . '/services/Paginator.php';
-
-session_start();
-if (!isset($_SESSION['logined'])) {
-
-    header('location: /pages/login.php');
-    exit();
-}
-
-if (isset($_SESSION['logined']) && $_SESSION['logined']['role'] != 'admin') {
-    unset($_SESSION['logined']);
-    header('location: /pages/login.php');
-    exit();
-}
-$limit = $_GET['limit'] ?? 12;
-$page = $_GET['page'] ?? 1;
-$offset = $page ? ($page - 1) * $limit : 0;
-$totalBills = getBillsCount();
-$paginator = new Paginator($limit, $totalBills, $page);
-$pages = $paginator->getPages(length: 3);
-$billList = [];
-try {
-    $result = getBillsResult($limit, $offset);
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while ($row = $result->fetch_assoc()) {
-            array_push($billList, $row);
-        }
-    }
-} catch (\Throwable $th) {
-    echo 'Error with server.';
-    exit();
-}
-if (isset($_SESSION['change_status_bill'])) {
-    if ($_SESSION['change_status_bill'] == true) {
-        echo '<script>alert("Đổi trạng thái đơn hàng thành công!")</script>';
-    } else {
-
-        echo '<script>alert("Đổi trạng thái đơn hàng thất bại, vui lòng thử lại sau.")</script>';;
-    }
-    unset($_SESSION['change_status_bill']);
-}
-// if (isset($_SESSION['create_bill'])) {
-//     if ($_SESSION['create_bill']['state'] == true) {
-//         echo '<script>alert("Tạo sản phẩm thành công!")</script>';
-//     } else {
-
-//         echo '<script>alert("Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.")</script>';
-//     }
-//     unset($_SESSION['create_bill']);
-// }
-
-// if (isset($_SESSION['delete_bill'])) {
-//     if ($_SESSION['delete_bill'] == true) {
-//         echo '<script>alert("Xóa sản phẩm thành công!")</script>';
-//     } else {
-
-//         echo '<script>alert("Xóa sản phẩm thất bại, vui lòng thử lại sau.")</script>';
-//     }
-//     unset($_SESSION['delete_bill']);
-// }
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -85,47 +17,50 @@ if (isset($_SESSION['change_status_bill'])) {
     <div class="container mt-new-page " style="min-height: 50vh;">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link " href="/pages/admin.php">Quản lý sản phẩm</a>
+                <a class="nav-link " href="/admin.php">Quản lý sản phẩm</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="/pages/adminUser.php">Quản lý người dùng</a>
+                <a class="nav-link " href="/adminUser.php">Quản lý người dùng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/pages/adminBill.php">Quản lý hóa đơn</a>
+                <a class="nav-link active" aria-current="page" href="/adminBill.php">Quản lý hóa đơn</a>
             </li>
         </ul>
         <main class="mt-5">
             <?php
-            if (isset($_SESSION['error_list'])) {
-                foreach ($_SESSION['error_list']['errorList'] as &$value) {
-                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        $value
-                       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                     </div>";
-                }
-                unset($_SESSION['error_list']);
-            }
+            include dirname(__DIR__) . '/components/errorList.php';
+            include dirname(__DIR__) . '/components/message.php';
+            if (isset($_SESSION['change_status_bill'])) {
+                if ($_SESSION['change_status_bill'] == true) {
+                    showMessage("Đổi trạng thái đơn hàng thành công!");
+                } else {
 
+                    showMessage("Đổi trạng thái đơn hàng thất bại, vui lòng thử lại sau.",'danger');;
+                }
+                unset($_SESSION['change_status_bill']);
+            }
             ?>
+
 
             <ul class="mt-5 p-0 ">
                 <?php
 
 
                 foreach ($billList as &$row) {
-                    $id = $row['id'];
-                    $userName = $row['userName'];
-                    $phoneNumber = $row['phoneNumber'];
-                    $address = $row['address'];
-                    $createdAt = $row['createdAt'];
-                    $status = $row['status'];
-                    $total = moneyFormat($row['total']);
+                    $id = $row->id;
+                    $userName = $row->userName;
+                    $phoneNumber = $row->phoneNumber;
+                    $address = $row->address;
+                    $createdAt = $row->createdAt;
+                    $status = $row->status;
+                    $total = $row->getFormatTotal();
                     echo "
                 <li class='p-4 shadow rounded-2 mt-4'>
                     <div class='d-flex gap-2 align-items-center mb-2'>
-                        <a class='fs-6  text-decoration-underline fw-bold text-black' href='/pages/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
-                        <form action='/services/bills/delete.php' method='post' class='m-0 d-flex align-items-center '>
+                        <a class='fs-6  text-decoration-underline fw-bold text-black' href='/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
+                        <form action='/adminBill.php' method='post' class='m-0 d-flex align-items-center '>
                             <input type='hidden' name='id' value='$id'/>
+                            <input type='hidden' name='delete' />
                           
                             <button class='border-0 bg-transparent text-danger fs-5' type='submit' id='del-btn'> <i class='fa-solid fa-trash-can'></i></button>
                         </form> 
@@ -138,7 +73,7 @@ if (isset($_SESSION['change_status_bill'])) {
                     <p class=' mb-2'>Địa chỉ giao hàng: <span class='fw-bold'>$address</span> </p>
                     <p class=' mb-2'>Trạng thái đơn hàng: </p>
                     
-                    <form action='/services/bills/updateStatus.php' method='post' style='width:250px;'>
+                    <form action='/adminBill.php' method='post' style='width:250px;'>
                         <select class='form-select fw-bold text-danger mb-2' name='status' onchange='enableSubmitStatus($id)'>
                             <option value='cancel'
                              ";
@@ -185,18 +120,18 @@ if (isset($_SESSION['change_status_bill'])) {
                 <ul class=" pagination ">
                     <li class="page-item<?= $paginator->getPrevPage() ?
                                             '' : ' disabled' ?>">
-                        <a role="button" href="/pages/adminBill.php?page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
+                        <a role="button" href="/adminBill.php?page=<?= $paginator->getPrevPage() ?>&limit=12" class="page-link">
                             <span>&laquo;</span>
                         </a>
                     </li>
                     <?php foreach ($pages as $page) : ?>
                         <li class="page-item<?= $paginator->currentPage === $page ?
-                                                ' active' : '' ?>"><a role="button" href="/pages/adminBill.php?page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
+                                                ' active' : '' ?>"><a role="button" href="/adminBill.php?page=<?= $page ?>&limit=12" class="page-link"><?= $page ?></a>
                         </li>
                     <?php endforeach ?>
                     <li class="page-item<?= $paginator->getNextPage() ?
                                             '' : ' disabled' ?>">
-                        <a role="button" href="/pages/adminBill.php?page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
+                        <a role="button" href="/adminBill.php?page=<?= $paginator->getNextPage() ?>&limit=12" class="page-link">
                             <span>&raquo;</span>
                         </a>
                     </li>

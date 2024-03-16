@@ -23,21 +23,27 @@ use Classes\Others\Utility as Utility;
     <?php
     include dirname(__DIR__) . '/components/navbar.php';
     ?>
-    <div class="container mt-new-page p-4 pt-5 shadow rounded-2">
-
-
-        <h2 class="text-center">Danh sách đơn hàng</h2>
-        <ul class="mt-5 p-0 ">
+    <main>
+        <div class="container mt-new-page p-4 pt-5 shadow rounded-2">
             <?php
-            foreach ($billList as &$row) {
-                $id = $row->id;
-                $userName = $row->userName;
-                $phoneNumber = $row->phoneNumber;
-                $address = $row->address;
-                $createdAt = $row->createdAt;
-                $status = $row->status;
-                $total = Utility::moneyFormat($row->total);
-                echo "
+            if (count($billList) == 0) {
+                echo '<h2 class="text-center mx-auto my-5 ">Không có đơn hàng nào!</h2>';
+            } else echo '<h2 class="text-center">Danh sách đơn hàng</h2>';
+            ?>
+
+            <ul class="mt-5 p-0 ">
+
+                <?php
+
+                foreach ($billList as &$row) {
+                    $id = $row->id;
+                    $userName = $row->userName;
+                    $phoneNumber = $row->phoneNumber;
+                    $address = $row->address;
+                    $createdAt = $row->createdAt;
+                    $status = $row->status;
+                    $total = Utility::moneyFormat($row->total);
+                    echo "
                 <li class='p-4 shadow rounded-2 mt-4'>
                     <a class='fs-6 mb-2 text-decoration-underline fw-bold text-black' href='/billDetail.php?id=$id'  style='white-space: nowrap;'>Mã đơn hàng: $id</a>
 
@@ -52,15 +58,17 @@ use Classes\Others\Utility as Utility;
                     
                 </li>
                 ";
-            }
+                }
 
 
 
-            ?>
-        </ul>
+                ?>
+            </ul>
 
 
-    </div>
+        </div>
+    </main>
+
 
     <?php
     include dirname(__DIR__) . "/components/footer.php";

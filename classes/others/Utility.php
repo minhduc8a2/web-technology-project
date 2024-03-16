@@ -35,7 +35,40 @@ class Utility
         }
         return true;
     }
-    public static function createErrorMessageForCreateShoe(array &$errorList)
+    public static function createErrorMessageForCreateUser(array &$errorList)
+    {
+        if (empty($_POST['name'])) {
+            array_push($errorList, "Vui lòng nhập họ tên.");
+        }
+        if (empty($_POST['email'])) {
+            array_push($errorList, "Vui lòng nhập email.");
+        } else {
+
+            if (!Utility::validateEmail($_POST['email'])) {
+                array_push($errorList, "Vui lòng nhập đúng định dạng email.");
+            }
+        }
+        if (empty($_POST['phoneNumber'])) {
+            array_push($errorList, "Vui lòng nhập số điện thoại.");
+        } else {
+            if (!Utility::validatePhoneNumber(trim($_POST['phoneNumber']))) {
+                array_push($errorList, "Vui lòng đúng định dạng số điện thoại.");
+            }
+        }
+        if (empty($_POST['address'])) {
+            array_push($errorList, "Vui lòng nhập địa chỉ.");
+        }
+        if (empty($_POST['role'])) {
+            array_push($errorList, "Vui lòng nhập vai trò.");
+        } else if (trim($_POST['role']) != 'admin' && trim($_POST['role']) != 'normal') {
+            array_push($errorList, "Vui lòng nhập 1 trong hai giá trị 'admin' hoặc 'normal' trong mục vai trò.");
+        }
+        if (empty($_POST['password'])) {
+            array_push($errorList, "Vui lòng nhập mật khẩu.");
+        }
+    }
+
+    public static function createErrorMessageForCreateShoe(array &$errorList, $haveImage = true)
     {
         if (empty($_POST['name'])) {
             array_push($errorList, "Vui lòng nhập tên sản phẩm");
@@ -63,7 +96,7 @@ class Utility
             }
         }
 
-        if (isset($_FILES['imageFile']) && $_FILES['imageFile']['error'] != 0) {
+        if (isset($_FILES['imageFile']) && $_FILES['imageFile']['error'] != 0 && $haveImage) {
 
             array_push($errorList, "Vui lòng chọn ảnh sản phẩm");
         }
@@ -84,7 +117,12 @@ class Utility
     }
     public static function deleteImageOnCloudinary($id)
     {
-        (new UploadApi())->destroy($id);
+        try {
+            (new UploadApi())->destroy($id);
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true;
     }
     public static function deleteImageOnCloudinaryByURL($imageurl)
     {
@@ -94,8 +132,10 @@ class Utility
                 $imageId = $temp[count($temp) - 2] . '/' . explode('.', $temp[count($temp) - 1])[0];
                 Utility::deleteImageOnCloudinary($imageId);
             } catch (\Throwable $th) {
-                //throw $th;
+                return false;
             }
+            return true;
         }
+        return false;
     }
 }

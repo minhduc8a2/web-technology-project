@@ -8,7 +8,6 @@ use Classes\Models\Shoe as Shoe;
 use Classes\Others\Utility as Utility;
 use Classes\Others\Paginator as Paginator;
 use Cloudinary\Configuration\Configuration;
-use Cloudinary\Api\Upload\UploadApi;
 
 
 
@@ -61,14 +60,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"]) && isset($_P
     }
 }
 //end of check if admin want to delete shoe
+// check if admin want to update shoe
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"]) && isset($_POST["update"])) {
+
+    $errorList = array();
+    Utility::createErrorMessageForCreateShoe($errorList, false);
+    if (count($errorList) == 0) {
+        $shoe = new Shoe($_POST);
+        $uploadOK = true;
+        if (isset($_FILES['imageFile']) && empty($_FILES['imageFile']['error'])) {
+            $oldImageurl = trim($_POST['imageurl']);
+            try {
+                Utility::deleteImageOnCloudinaryByURL($oldImageurl);
+                $imageurl = Utility::uploadImage($_FILES['imageFile'])['imageurl'];
+                $shoe->imageurl = $imageurl;
+            } catch (\Throwable $th) {
+                $uploadOK = false;
+            }
+        }
+
+
+        $check = Shoe::update($shoe);
+
+        if ($check && $uploadOK) {
+
+            $_SESSION['update_shoe'] = array('id' => $shoe->id, 'state' => true);
+        } else {
+            $_SESSION['update_shoe'] = array('id' => $shoe->id, 'state' => false);
+        }
+    }
+    if (count($errorList) != 0) {
+        $_SESSION['error_list'] = array('id' => $_POST['id'], 'errorList' => $errorList);
+    }
+}
+// end of check if admin want to update shoe
 
 $categoryList = Category::getAll();
 
 $limit = $_GET['limit'] ?? 12;
 $page = $_GET['page'] ?? 1;
 $offset = $page ? ($page - 1) * $limit : 0;
-$totalShoes = Shoe::getShoesCount();
+$totalShoes = Shoe::getCount();
 $paginator = new Paginator($limit, $totalShoes, $page);
 $pages = $paginator->getPages(length: 3);
 
