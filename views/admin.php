@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/styles.css">
@@ -36,7 +36,7 @@
                     showMessage('Cập nhật thành công!');
                 } else {
 
-                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.','danger');;
+                    showMessage('Cập nhật thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.', 'danger');;
                 }
                 unset($_SESSION['update_shoe']);
             }
@@ -45,7 +45,7 @@
                     showMessage('Tạo sản phẩm thành công!');
                 } else {
 
-                    showMessage('Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.','danger');
+                    showMessage('Tạo sản phẩm thất bại, vui lòng kiểm tra lại thông tin sản phẩm hoặc thử lại sau.', 'danger');
                 }
                 unset($_SESSION['create_shoe']);
             }
@@ -55,7 +55,7 @@
                     showMessage('Xóa sản phẩm thành công!');
                 } else {
 
-                    showMessage('Xóa sản phẩm thất bại, vui lòng thử lại sau.','danger');
+                    showMessage('Xóa sản phẩm thất bại, vui lòng thử lại sau.', 'danger');
                 }
                 unset($_SESSION['delete_shoe']);
             }

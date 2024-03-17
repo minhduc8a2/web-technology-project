@@ -9,3 +9,6 @@ Học kỳ 2, Năm học 2023-2024
 **Lớp học phần**: CT275/01
 
 **Tên dự án**: Website thương mại điện tử bán giày Adidas
+
+## Hướng dẫn chạy project
+Bước 1: git clone 

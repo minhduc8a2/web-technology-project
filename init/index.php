@@ -10,3 +10,4 @@ $database = new DatabaseConnector();
 
 require 'init_tables.php';
 require 'init_triggers.php';
+require 'init_samples.php';

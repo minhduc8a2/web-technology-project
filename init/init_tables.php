@@ -129,13 +129,3 @@ try {
 }
 
 
-try {
-    $sql = $database->queryNotExecuted("INSERT INTO `users` (`id`, `name`, `email`, `phoneNumber`, `address`, `password`, `avatar`, `role`) VALUES (NULL, 'admin', 'admin@gmail.com', '0000000000', 'Database', '12345678', NULL, 'admin') ;");
-
-    if ($sql->execute() === TRUE) {
-
-        echo "<br>Admin account created!";
-    } else echo "<br>failed to insert admin";
-} catch (\Throwable $th) {
-    echo $th;
-}
