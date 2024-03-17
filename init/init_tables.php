@@ -7,7 +7,7 @@ try {
         name VARCHAR(200) NOT NULL,
         category VARCHAR(100) NOT NULL,
         description VARCHAR(1000) NOT NULL,
-        updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         price INT UNSIGNED NOT NULL,
         instock INT UNSIGNED NOT NULL,
         sold INT UNSIGNED NOT NULL,
@@ -26,8 +26,8 @@ try {
 try {
     $sql = $database->queryNotExecuted("CREATE TABLE categories (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        name VARCHAR(200) NOT NULL,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );");
 
     if ($sql->execute() === TRUE) {
@@ -44,11 +44,11 @@ try {
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL ,
-        phoneNumber VARCHAR(100) NOT NULL,
-        address VARCHAR(100) NOT NULL,
-        password VARCHAR(200) NOT NULL,
+        phoneNumber VARCHAR(20) NOT NULL,
+        address VARCHAR(200) NOT NULL,
+        password VARCHAR(100) NOT NULL,
         avatar VARCHAR(200) ,
-        role VARCHAR(15) DEFAULT 'normal',
+        role VARCHAR(10) DEFAULT 'normal' NOT NULL,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE (phoneNumber, email)
         );");
@@ -110,9 +110,9 @@ try {
 
 try {
     $sql = $database->queryNotExecuted("CREATE TABLE billItems (
-        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         billId INT(6) unsigned not null,
         shoeId INT(6) unsigned NOT NULL,
+        PRIMARY KEY (billId, shoeId),
         price INT NOT NULL,
         quantity INT NOT NULL,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -129,13 +129,3 @@ try {
 }
 
 
-try {
-    $sql = $database->queryNotExecuted("INSERT INTO `users` (`id`, `name`, `email`, `phoneNumber`, `address`, `password`, `avatar`, `role`) VALUES (NULL, 'admin', 'admin@gmail.com', '0000000000', 'Database', '12345678', NULL, 'admin') ;");
-
-    if ($sql->execute() === TRUE) {
-
-        echo "<br>Admin account created!";
-    } else echo "<br>failed to insert admin";
-} catch (\Throwable $th) {
-    echo $th;
-}
