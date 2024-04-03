@@ -7,6 +7,17 @@ Học kỳ 2, Năm học 2023-2024
 * **Lớp học phần**: CT275/01
 * **Tên dự án**: Website thương mại điện tử bán giày Adidas
 
+## Default account
+
+- Username: `admin`
+- Password: `12345678`
+  
+## Require MySQL server
+
+- Account: `root`
+- Password: `root`
+- To change root password of root@localhost : `SET PASSWORD FOR root@localhost = PASSWORD('root');`
+
 ## Hướng dẫn chạy project
 
 * Bước 1: `git clone https://github.com/23-24Sem2-Courses/ct27501-project-minhduc8a2.git`
@@ -17,3 +28,6 @@ Học kỳ 2, Năm học 2023-2024
 * Bước 6: `cd public`
 * Bước 6: `php -S localhost:3000`
 * Bước 7: Truy cập : `http://localhost:3000` trên trình duyệt
+
+
+
